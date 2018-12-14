@@ -52,9 +52,11 @@ mod = mx.mod.Module(AlexNet, context = mx.gpu(0))
 
 train_iter = mx.io.ImageRecordIter(
     path_imgrec="Data/RecordIO/mini-train.rec",  # rec文件路径
+    #path_imgrec="Data/RecordIO/train.rec",  # rec文件路径
     data_shape=(3, 227, 227),     # 期望的数据形状，注意：
                                 # 即使图片不是这个尺寸，也可以在此被自动转换
-    batch_size=10,  # 每次传入100条数据
+    batch_size=10,  # 每次传入10条数据
+    #batch_size=64,  # 每次传入64条数据
 
     mean_r = 128,   #三个通道的均值
     mean_g = 128,
@@ -66,8 +68,11 @@ train_iter = mx.io.ImageRecordIter(
 # 创建内部测试集iter
 val_iter = mx.io.ImageRecordIter(
     path_imgrec="Data/RecordIO/mini-val.rec",
+    #path_imgrec="Data/RecordIO/val.rec",
     data_shape=(3, 227, 227),
+
     batch_size=10,  # 必须与上面的batch_size相等，否则不能对应
+    #batch_size=64,  # 必须与上面的batch_size相等，否则不能对应
 
     mean_r=128,  # 三个通道的均值
     mean_g=128,
@@ -77,6 +82,7 @@ val_iter = mx.io.ImageRecordIter(
 )
 
 logging.getLogger().setLevel(logging.DEBUG)
+#fh = logging.FileHandler('log/train_AlexNet.log')
 fh = logging.FileHandler('log/train_AlexNet-miniDataset.log')
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
@@ -88,12 +94,14 @@ logging.getLogger().addHandler(ch)
 
 lr_scheduler = mx.lr_scheduler.FactorScheduler(500, factor = 0.95)
 optimizer_params = {
-    'learning_rate': 0.01,
+    'learning_rate': 0.005,
     'momentum': 0.9,
-    'wd': 0.0005,
+    'wd': 0.0005,   #weight decay
     'lr_scheduler': lr_scheduler
 }
-checkpoint = mx.callback.do_checkpoint('params/miniPascalVOC_AlexNet', period = 5)
+num_epoch = 40  #总epoch的数量
+checkpoint = mx.callback.do_checkpoint('params/miniPascalVOC_AlexNet', period = 10)
+#checkpoint = mx.callback.do_checkpoint('params/PascalVOC_AlexNet', period = 5)
 
 #定义eval_metrics以在训练时输出相关信息
 eval_metrics = mx.metric.CompositeEvalMetric()
@@ -103,12 +111,14 @@ metric3 = mx.metric.MSE()
 for child_metric in [metric1, metric2, metric3]:
     eval_metrics.add(child_metric)
 
+logging.debug('num_epoch={}'.format(num_epoch))
+
 start = time.time() #设置起始时间以记录训练用时
 mod.fit(
     train_iter,
     eval_data = val_iter,
     optimizer_params = optimizer_params,
-    num_epoch = 36,
+    num_epoch = num_epoch,
     epoch_end_callback = checkpoint,
     eval_metric = eval_metrics
 )
