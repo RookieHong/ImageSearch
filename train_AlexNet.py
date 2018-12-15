@@ -92,9 +92,9 @@ ch.setFormatter(formatter)
 logging.getLogger().addHandler(fh)
 logging.getLogger().addHandler(ch)
 
-lr_scheduler = mx.lr_scheduler.FactorScheduler(500, factor = 0.95)
+lr_scheduler = mx.lr_scheduler.FactorScheduler(500, factor = 0.90)
 optimizer_params = {
-    'learning_rate': 0.005,
+    'learning_rate': 0.01,
     'momentum': 0.9,
     'wd': 0.0005,   #weight decay
     'lr_scheduler': lr_scheduler

@@ -80,7 +80,7 @@ while line:             #逐行读取log文件，直到最后一次训练
         val_mse[i] = float(re.search('mse=(.*)', line).group(1))
         line = f.readline()
 
-        if re.search('Change learning rate', line) is not None: # 跳过改变学习率的那一行， 通常都在validation_mse那行之后
+        if re.search('learning rate', line) is not None: # 跳过改变学习率的那一行， 通常都在validation_mse那行之后
             line = f.readline()
 
     if showAll:

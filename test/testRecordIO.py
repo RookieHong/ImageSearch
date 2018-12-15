@@ -5,7 +5,7 @@ import numpy as np
 import json
 
 train_iter = mx.io.ImageRecordIter(
-    path_imgrec="../Data/RecordIO/mini-val.rec",  # rec文件路径
+    path_imgrec="../Data/RecordIO/mini-train.rec",  # rec文件路径
     #path_imgrec="Data/RecordIO/train.rec",  # rec文件路径
     data_shape=(3, 227, 227),     # 期望的数据形状，注意：
                                 # 即使图片不是这个尺寸，也可以在此被自动转换

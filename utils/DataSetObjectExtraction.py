@@ -47,7 +47,7 @@ for i, filename in enumerate(filenames):
         cropped.save(save_path)
         count[label] = count[label] + 1
 
-outputCount_f = open(output_path + 'objectCount.txt', 'w')
+outputCount_f = open('../Data/VOCdevkit/VOC2012/' + 'objectCount.txt', 'w')
 for i in range(0, 20):
     outputCount_f.write('{}类有{}张图片\n'.format(labels[i], count[i]))
 outputCount_f.close()
