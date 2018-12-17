@@ -42,43 +42,43 @@ relu7 = mx.sym.Activation(data = fc2, act_type = 'relu')
 dropout2 = mx.sym.Dropout(data = relu7, p = 0.5)
 
 #stage 6
-fc3 = mx.sym.FullyConnected(data = dropout2, num_hidden = 20)   #num_hidden应当等于分类的类别数，这里因为是使用的Pascal VOC2012数据集，所以为20
+fc3 = mx.sym.FullyConnected(data = dropout2, num_hidden = 20)   #num_hidden should equal Pascal VOC2012 data's classes=20
 softmax = mx.sym.SoftmaxOutput(data = fc3, name = 'softmax')
 
 AlexNet = softmax
-mod = mx.mod.Module(AlexNet, context = mx.gpu(0))
+mod = mx.mod.Module(AlexNet, context = mx.gpu(1))
 
-#mx.viz.plot_network(AlexNet,title='AlexNet',save_format='jpg',hide_weights=True).view()    #画出网络结构
+#mx.viz.plot_network(AlexNet,title='AlexNet',save_format='jpg',hide_weights=True).view()    #visulize network
 
 train_iter = mx.io.ImageRecordIter(
-    path_imgrec="Data/RecordIO/mini-train.rec",  # rec文件路径
-    #path_imgrec="Data/RecordIO/train.rec",  # rec文件路径
-    data_shape=(3, 227, 227),     # 期望的数据形状，注意：
-                                # 即使图片不是这个尺寸，也可以在此被自动转换
-    batch_size=10,  # 每次传入10条数据
-    #batch_size=64,  # 每次传入64条数据
+    path_imgrec="Data/RecordIO/mini-train.rec",  # rec file path
+    #path_imgrec="Data/RecordIO/train.rec",  # rec file path
+    data_shape=(3, 227, 227),     # 3x227x227 is the required AlexNet input image size
 
-    mean_r = 128,   #三个通道的均值
+    batch_size=10,  # batch size=10 for mini dataset
+    #batch_size=64,  # batch size=64 for large dataset
+
+    mean_r = 128,   #mean RGB
     mean_g = 128,
     mean_b = 128,
 
-    scale = 0.00390625  #减去均值后归一化到[-0.5, 0.5]之间
+    scale = 0.00390625  #scale image pixels' value to [-0.5, 0.5]
 )
 
-# 创建内部测试集iter
+# validation dataset iter
 val_iter = mx.io.ImageRecordIter(
     path_imgrec="Data/RecordIO/mini-val.rec",
     #path_imgrec="Data/RecordIO/val.rec",
     data_shape=(3, 227, 227),
 
-    batch_size=10,  # 必须与上面的batch_size相等，否则不能对应
-    #batch_size=64,  # 必须与上面的batch_size相等，否则不能对应
+    batch_size=10,  # batch size=10 for mini dataset
+    #batch_size=64,  # batch size=64 for large dataset
 
-    mean_r=128,  # 三个通道的均值
+    mean_r=128,  # mean RGB
     mean_g=128,
     mean_b=128,
 
-    scale=0.00390625  # 减去均值后归一化到[-0.5, 0.5]之间
+    scale=0.00390625  # scale image pixel value to [-0.5, 0.5]
 )
 
 logging.getLogger().setLevel(logging.DEBUG)
@@ -99,11 +99,11 @@ optimizer_params = {
     'wd': 0.0005,   #weight decay
     'lr_scheduler': lr_scheduler
 }
-num_epoch = 40  #总epoch的数量
+num_epoch = 40  #train epochs
 checkpoint = mx.callback.do_checkpoint('params/miniPascalVOC_AlexNet', period = 10)
 #checkpoint = mx.callback.do_checkpoint('params/PascalVOC_AlexNet', period = 5)
 
-#定义eval_metrics以在训练时输出相关信息
+#set eval_metrics
 eval_metrics = mx.metric.CompositeEvalMetric()
 metric1 = mx.metric.Accuracy()
 metric2 = mx.metric.CrossEntropy()
@@ -113,7 +113,7 @@ for child_metric in [metric1, metric2, metric3]:
 
 logging.debug('num_epoch={}'.format(num_epoch))
 
-start = time.time() #设置起始时间以记录训练用时
+start = time.time() #start time
 mod.fit(
     train_iter,
     eval_data = val_iter,
@@ -123,4 +123,4 @@ mod.fit(
     eval_metric = eval_metrics
 )
 time_elapsed = time.time() - start
-print('训练总用时：{}s'.format(time_elapsed))
+print('total training time:{}s'.format(time_elapsed))

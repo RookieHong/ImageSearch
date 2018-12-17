@@ -1,5 +1,5 @@
 # encoding=utf8
-#这个脚本是用来可视化训练的log文件的内容的，以图表形式画出训练过程的loss曲线和acc曲线
+#This script is to visualize log file to show loss and accuracy
 import re
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,36 +14,36 @@ def showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc
     plt.title('Training accuracy')
     plt.plot(x, train_acc, 'r', label='train acc')
     plt.plot(x, val_acc, 'b', label='val acc')
-    plt.legend()  # 显示上面的label
+    plt.legend()  # print label
     plt.ylabel('accuracy')
 
     plt.subplot(312)
     plt.title('Training cross entropy')
     plt.plot(x, train_crossEntropy, 'r', label='train cross entropy')
     plt.plot(x, val_crossEntropy, 'b', label='val cross entropy')
-    plt.legend()  # 显示上面的label
+    plt.legend()  # print label
     plt.ylabel('cross entropy')
 
     plt.subplot(313)
     plt.title('Training MSE')
     plt.plot(x, train_mse, 'r', label='train mse')
     plt.plot(x, val_mse, 'b', label='val mse')
-    plt.legend()  # 显示上面的label
+    plt.legend()  # print label
     plt.xlabel('Epoch')
     plt.ylabel('MSE')
 
 logFiles = os.listdir('../log/')
 for i, logFile in enumerate(logFiles):
     print('{}: {}'.format(i, logFile))
-logFileName = logFiles[input('输入log文件编号:')]
-showAll = True if raw_input('是否画出每次训练的曲线?(y确认否则只画出最后一次):') == 'y' else False
+logFileName = logFiles[input('input log file No.:')]
+showAll = True if raw_input('Visualize all training logs?(input y or will visualize only the last training log):') == 'y' else False
 
 f =  open('../log/' + logFileName)
 line = f.readline()
 
-num = 0 #记录这是log文件中的第几次训练
+num = 0 #records the number of log files
 
-while line:             #逐行读取log文件，直到最后一次训练
+while line:             #keep reading till log file ends
     epochs = int(re.search('num_epoch=(.*)', line).group(1))
     line = f.readline()
 
@@ -70,7 +70,7 @@ while line:             #逐行读取log文件，直到最后一次训练
         time_cost[i] = float(re.search('cost=(.*)', line).group(1))
         line = f.readline()
 
-        if re.search('checkpoint', line) is not None:   # 跳过保存检查点参数的那一行，通常都在time_cost那行之后
+        if re.search('checkpoint', line) is not None:   # skip the line about time_cost
             line = f.readline()
 
         val_acc[i] = float(re.search('accuracy=(.*)', line).group(1))
@@ -80,7 +80,7 @@ while line:             #逐行读取log文件，直到最后一次训练
         val_mse[i] = float(re.search('mse=(.*)', line).group(1))
         line = f.readline()
 
-        if re.search('learning rate', line) is not None: # 跳过改变学习率的那一行， 通常都在validation_mse那行之后
+        if re.search('learning rate', line) is not None: # skip the line about learning rate changes
             line = f.readline()
 
     if showAll:

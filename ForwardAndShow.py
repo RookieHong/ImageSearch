@@ -7,9 +7,9 @@ import mxnet as mx
 from collections import namedtuple
 import json
 
-with open('Classes.json', 'r') as json_f:    #载入记录类别和对应编号的json文件
+with open('Classes.json', 'r') as json_f:    ##open json file that includes classes-label info
     classes = json.load(json_f)
-    classes = dict(zip(classes.values(), classes.keys()))   #把键值对颠倒方便输出
+    classes = dict(zip(classes.values(), classes.keys()))   ## reverse json info to label-classes
 
 Batch = namedtuple('Batch', ['data'])
 input_path = 'Data/VOCdevkit/VOC2012/ResizedObjects'

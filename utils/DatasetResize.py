@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 imgs_path = '../Data/VOCdevkit/VOC2012/JPEGImages/'
-output_path = '../Data/VOCdevkit/VOC2012/ResizedImages/'
+output_path = '../Data/ResizedImages/'
 filenames = os.listdir(imgs_path)
 
 for i, filename in enumerate(filenames):

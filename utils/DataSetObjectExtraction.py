@@ -7,33 +7,34 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 imgs_path = '../Data/VOCdevkit/VOC2012/JPEGImages/'
-output_path = '../Data/VOCdevkit/VOC2012/ResizedObjects/'
+output_path = '../Data/ResizedObjects/'
 filenames = os.listdir(imgs_path)
 
 count = np.zeros(20)
+count.dtype = 'int'
 
-with open('../Classes.json', 'r') as json_f:    #载入记录类别和对应编号的json文件
+with open('../Classes.json', 'r') as json_f:    #open json file that includes classes-label info
     classes = json.load(json_f)
-    labels = dict(zip(classes.values(), classes.keys()))  # 把键值对颠倒方便输出
+    labels = dict(zip(classes.values(), classes.keys()))  # reverse json info to label-classes
 
 for i, filename in enumerate(filenames):
     filepath = os.sep.join([imgs_path, filename])
     img = Image.open(filepath)
-    xmlTree = ET.parse('../Data/VOCdevkit/VOC2012/Annotations/' + filename.split('.')[0] + '.xml')  # 读取并解析该图片所对应的xml文件
+    xmlTree = ET.parse('../Data/VOCdevkit/VOC2012/Annotations/' + filename.split('.')[0] + '.xml')  # reads corresponding XML file
 
     for object in xmlTree.findall('object'):
         name = object.find('name').text
         label = classes[name]
 
         bndbox = object.find('bndbox')
-        xmin = int(float(bndbox.find('xmin').text))     #似乎有些坐标并不是整数
+        xmin = int(float(bndbox.find('xmin').text))     #reads coordinates
         ymin = int(float(bndbox.find('ymin').text))
         xmax = int(float(bndbox.find('xmax').text))
         ymax = int(float(bndbox.find('ymax').text))
 
         height = ymax - ymin
         width = xmax - xmin
-        if height < 32 or width < 32:   #筛选掉一些模糊的图片
+        if height < 32 or width < 32:   #skip boxes that are too small
             continue
 
         cropped = img.crop((xmin, ymin, xmax, ymax))
@@ -47,7 +48,7 @@ for i, filename in enumerate(filenames):
         cropped.save(save_path)
         count[label] = count[label] + 1
 
-outputCount_f = open('../Data/VOCdevkit/VOC2012/' + 'objectCount.txt', 'w')
+outputCount_f = open('../Data/' + 'objectCount.txt', 'w')
 for i in range(0, 20):
-    outputCount_f.write('{}类有{}张图片\n'.format(labels[i], count[i]))
+    outputCount_f.write('{} has {} images\n'.format(labels[i], count[i]))
 outputCount_f.close()

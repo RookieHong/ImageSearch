@@ -5,13 +5,13 @@ test_iter = mx.io.ImageRecordIter(
     path_imgrec = 'Data/RecordIO/test.rec',
     data_shape = (3, 227, 227),
 
-    batch_size=50,  # 每次传入50条数据
+    batch_size=50,  # batch size=50
 
-    mean_r = 128,   #三个通道的均值
+    mean_r = 128,   #mean RGB
     mean_g = 128,
     mean_b = 128,
 
-    scale = 0.00390625  #减去均值后归一化到[-0.5, 0.5]之间
+    scale = 0.00390625  #scale the pixels to [-0.5, 0.5]
 )
 mod = mx.mod.Module.load('params/PascalVOC_AlexNet', 35, context = mx.gpu(0))
 mod.bind(
