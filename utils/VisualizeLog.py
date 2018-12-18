@@ -5,6 +5,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+def readLogLine(file):  #keep reading till reads something useful
+    line = file.readline()
+    while line \
+        and not re.search('num_epoch=(.*)', line) \
+        and not re.search('accuracy=(.*)', line) \
+        and not re.search('entropy=(.*)', line) \
+        and not re.search('mse=(.*)', line) \
+        and not re.search('cost=(.*)', line):
+            line = file.readline()
+    return line
+
 def showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc, val_crossEntropy, val_mse):
     x = np.arange(0, epochs)
 
@@ -39,13 +50,23 @@ logFileName = logFiles[input('input log file No.:')]
 showAll = True if raw_input('Visualize all training logs?(input y or will visualize only the last training log):') == 'y' else False
 
 f =  open('../log/' + logFileName)
-line = f.readline()
+line = readLogLine(f)
 
 num = 0 #records the number of log files
 
+logDict = {
+    'Train-accuracy=(.*)': 'train_acc[i]',
+    'Train-cross-entropy=(.*)': 'train_crossEntropy[i]',
+    'Train-mse=(.*)': 'train_mse[i]',
+    'cost=(.*)': 'time_cost[i]',
+    'Validation-accuracy=(.*)': 'val_acc[i]',
+    'Validation-cross-entropy=(.*)': 'val_crossEntropy[i]',
+    'Validation-mse=(.*)': 'val_mse[i]'
+}
+
 while line:             #keep reading till log file ends
     epochs = int(re.search('num_epoch=(.*)', line).group(1))
-    line = f.readline()
+    line = readLogLine(f)
 
     train_acc = np.zeros(epochs)
     train_crossEntropy = np.zeros(epochs)
@@ -59,29 +80,14 @@ while line:             #keep reading till log file ends
 
     num = num + 1
 
-    for i in range(0, epochs):
-        train_acc[i] = float(re.search('accuracy=(.*)', line).group(1))
-        line = f.readline()
-        train_crossEntropy[i] = float(re.search('entropy=(.*)', line).group(1))
-        line = f.readline()
-        train_mse[i] = float(re.search('mse=(.*)', line).group(1))
-        line = f.readline()
-
-        time_cost[i] = float(re.search('cost=(.*)', line).group(1))
-        line = f.readline()
-
-        if re.search('checkpoint', line) is not None:   # skip the line about time_cost
-            line = f.readline()
-
-        val_acc[i] = float(re.search('accuracy=(.*)', line).group(1))
-        line = f.readline()
-        val_crossEntropy[i] = float(re.search('entropy=(.*)', line).group(1))
-        line = f.readline()
-        val_mse[i] = float(re.search('mse=(.*)', line).group(1))
-        line = f.readline()
-
-        if re.search('learning rate', line) is not None: # skip the line about learning rate changes
-            line = f.readline()
+    while line and not re.search('num_epoch=(.*)', line):    #check if reached the end of training
+        for key in logDict: #check if this line has info that contained in logDict
+            i = int(re.search('Epoch\[(.*)\]', line).group(1))
+            value = re.search(key, line)
+            if value:
+                exec('{}={}'.format(logDict[key], value.group(1)))
+                break
+        line = readLogLine(f)
 
     if showAll:
         showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc, val_crossEntropy, val_mse)

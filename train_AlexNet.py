@@ -46,7 +46,7 @@ fc3 = mx.sym.FullyConnected(data = dropout2, num_hidden = 20)   #num_hidden shou
 softmax = mx.sym.SoftmaxOutput(data = fc3, name = 'softmax')
 
 AlexNet = softmax
-mod = mx.mod.Module(AlexNet, context = mx.gpu(1))
+mod = mx.mod.Module(AlexNet, context = mx.gpu(0))
 
 #mx.viz.plot_network(AlexNet,title='AlexNet',save_format='jpg',hide_weights=True).view()    #visulize network
 
