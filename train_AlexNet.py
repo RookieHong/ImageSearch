@@ -100,8 +100,7 @@ optimizer_params = {
     'lr_scheduler': lr_scheduler
 }
 num_epoch = 40  #train epochs
-checkpoint = mx.callback.do_checkpoint('params/miniPascalVOC_AlexNet', period = 10)
-#checkpoint = mx.callback.do_checkpoint('params/PascalVOC_AlexNet', period = 5)
+checkpoint = mx.callback.do_checkpoint('params/miniPascalVOC_AlexNet', period = num_epoch)
 
 #set eval_metrics
 eval_metrics = mx.metric.CompositeEvalMetric()
