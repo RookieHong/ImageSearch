@@ -5,7 +5,7 @@ import logging
 import time
 from importlib import import_module
 
-netName = 'mlp'   #the symbol file name in symbols directory
+netName = 'custom'   #the symbol file name in symbols directory
 net = import_module('symbols.'+ netName)
 sym = net.get_symbol(num_classes=20)
 mod = mx.mod.Module(sym, context = mx.gpu(0))
@@ -58,12 +58,12 @@ logging.getLogger().addHandler(ch)
 
 lr_scheduler = mx.lr_scheduler.FactorScheduler(500, factor = 0.90)
 optimizer_params = {
-    'learning_rate': 0.01,
+    'learning_rate': 0.00001,
     'momentum': 0.9,
     'wd': 0.0005,   #weight decay
     'lr_scheduler': lr_scheduler
 }
-num_epoch = 40  #train epochs
+num_epoch = 300  #train epochs
 checkpoint = mx.callback.do_checkpoint(checkpointName, period = num_epoch)
 
 #set eval_metrics

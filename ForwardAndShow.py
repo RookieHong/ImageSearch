@@ -12,7 +12,7 @@ with open('Classes.json', 'r') as json_f:    ##open json file that includes clas
     classes = dict(zip(classes.values(), classes.keys()))   ## reverse json info to label-classes
 
 Batch = namedtuple('Batch', ['data'])
-input_path = 'Data/VOCdevkit/VOC2012/ResizedObjects'
+input_path = 'Data/ResizedObjects'
 mod = mx.mod.Module.load('params/PascalVOC_AlexNet', 35, context=mx.gpu(0))
 mod.bind(
     data_shapes=[('data', (1, 3, 227, 227))],
