@@ -5,7 +5,7 @@ import logging
 import time
 from importlib import import_module
 
-netName = 'AlexNet'   #the symbol file name in symbols directory
+netName = 'mlp'   #the symbol file name in symbols directory
 net = import_module('symbols.'+ netName)
 sym = net.get_symbol(num_classes=20)
 mod = mx.mod.Module(sym, context = mx.gpu(0))

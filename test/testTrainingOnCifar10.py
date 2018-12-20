@@ -34,13 +34,15 @@ def fit(batch_num,model,val_iter,batch_size):
 batch_size = 100
 val_iter = mx.io.NDArrayIter(to4d(val_img),val_lbl,batch_size)
 
-netName = 'LeNet'   #the symbol file name in symbols directory
+netName = 'vggNet'   #the symbol file name in symbols directory
 net = import_module('symbols.'+ netName)
-sym = net.get_symbol()
+sym = net.get_symbol(num_classes=10)
 mod = mx.mod.Module(sym, context = mx.gpu(0))
 
+logFileName = '../log/train_{}-CIFAR10.log'.format(netName)
+
 logging.getLogger().setLevel(logging.DEBUG)
-fh = logging.FileHandler('../log/train-CIFAR10.log')
+fh = logging.FileHandler(logFileName)
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
