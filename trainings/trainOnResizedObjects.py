@@ -11,10 +11,10 @@ sym = net.get_symbol(num_classes=20)
 mod = mx.mod.Module(sym, context = mx.gpu(0))
 
 usingMiniDataset = True
-trainFile = "Data/RecordIO/mini-train.rec" if usingMiniDataset else "Data/RecordIO/train.rec"
-valFile = "Data/RecordIO/mini-val.rec" if usingMiniDataset else "Data/RecordIO/val.rec"
-logFileName = 'log/train_' + netName + '-miniDataset.log' if usingMiniDataset else 'log/train_' + netName + '.log'
-checkpointName = 'params/miniPascalVOC_' + netName if usingMiniDataset else 'params/PascalVOC_' + netName
+trainFile = "../Data/RecordIO/mini-train.rec" if usingMiniDataset else "../Data/RecordIO/train.rec"
+valFile = "../Data/RecordIO/mini-val.rec" if usingMiniDataset else "../Data/RecordIO/val.rec"
+logFileName = '../log/train_' + netName + '-miniDataset.log' if usingMiniDataset else '../log/train_' + netName + '.log'
+checkpointName = '../params/miniPascalVOC_' + netName if usingMiniDataset else '../params/PascalVOC_' + netName
 batch_size = 10 if usingMiniDataset else 64
 
 #mx.viz.plot_network(AlexNet,title='AlexNet',save_format='jpg',hide_weights=True).view()    #visulize network
@@ -58,12 +58,12 @@ logging.getLogger().addHandler(ch)
 
 lr_scheduler = mx.lr_scheduler.FactorScheduler(500, factor = 0.90)
 optimizer_params = {
-    'learning_rate': 0.00001,
+    'learning_rate': 0.001,
     'momentum': 0.9,
     'wd': 0.0005,   #weight decay
     'lr_scheduler': lr_scheduler
 }
-num_epoch = 300  #train epochs
+num_epoch = 40  #train epochs
 checkpoint = mx.callback.do_checkpoint(checkpointName, period = num_epoch)
 
 #set eval_metrics

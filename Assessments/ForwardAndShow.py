@@ -7,13 +7,13 @@ import mxnet as mx
 from collections import namedtuple
 import json
 
-with open('Classes.json', 'r') as json_f:    ##open json file that includes classes-label info
+with open('../Classes.json', 'r') as json_f:    ##open json file that includes classes-label info
     classes = json.load(json_f)
     classes = dict(zip(classes.values(), classes.keys()))   ## reverse json info to label-classes
 
 Batch = namedtuple('Batch', ['data'])
-input_path = 'Data/ResizedObjects'
-mod = mx.mod.Module.load('params/PascalVOC_AlexNet', 35, context=mx.gpu(0))
+input_path = '../Data/ResizedObjects'
+mod = mx.mod.Module.load('../params/PascalVOC_AlexNet', 35, context=mx.gpu(0))
 mod.bind(
     data_shapes=[('data', (1, 3, 227, 227))],
     for_training=False

@@ -2,13 +2,13 @@
 import os
 import random
 
-trainLst_f = open('Data/RecordIO/train.lst', 'w')
-valLst_f = open('Data/RecordIO/val.lst', 'w')
-testLst_f = open('Data/RecordIO/test.lst', 'w')
+trainLst_f = open('../Data/RecordIO/train.lst', 'w')
+valLst_f = open('../Data/RecordIO/val.lst', 'w')
+testLst_f = open('../Data/RecordIO/test.lst', 'w')
 
 trainNo = valNo = testNo = 0
 
-imgs_path = 'Data/ResizedObjects'
+imgs_path = '../Data/ResizedObjects'
 filenames = os.listdir(imgs_path)
 
 for i, filename in enumerate(filenames):

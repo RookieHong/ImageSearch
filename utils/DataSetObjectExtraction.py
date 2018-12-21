@@ -38,7 +38,7 @@ for i, filename in enumerate(filenames):
             continue
 
         cropped = img.crop((xmin, ymin, xmax, ymax))
-        cropped = cropped.resize((227, 227), Image.ANTIALIAS)
+        cropped = cropped.resize((224, 224), Image.ANTIALIAS)
 
         #plt.figure(str(height) + 'x' + str(width) + ' ' + name)
         #plt.imshow(cropped)
