@@ -4,6 +4,7 @@ import re
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from utils import selectors
 
 def readLogLine(file):  #keep reading till reads something useful
     line = file.readline()
@@ -43,10 +44,7 @@ def showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc
     plt.xlabel('Epoch')
     plt.ylabel('MSE')
 
-logFiles = os.listdir('../log/')
-for i, logFile in enumerate(logFiles):
-    print('{}: {}'.format(i, logFile))
-logFileName = logFiles[input('input log file No.:')]
+logFileName = selectors.selectLog('../log/')
 showAll = True if raw_input('Visualize all training logs?(input y or will visualize only the last training log):') == 'y' else False
 
 f =  open('../log/' + logFileName)

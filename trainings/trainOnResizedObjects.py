@@ -5,10 +5,10 @@ import logging
 import time
 from importlib import import_module
 
-netName = 'custom'   #the symbol file name in symbols directory
+netName = 'LeNet'   #the symbol file name in symbols directory
 net = import_module('symbols.'+ netName)
 sym = net.get_symbol(num_classes=20)
-mod = mx.mod.Module(sym, context = mx.gpu(0))
+mod = mx.mod.Module(sym, context = mx.gpu())
 
 usingMiniDataset = True
 trainFile = "../Data/RecordIO/mini-train.rec" if usingMiniDataset else "../Data/RecordIO/train.rec"
@@ -17,7 +17,7 @@ logFileName = '../log/train_' + netName + '-miniDataset.log' if usingMiniDataset
 checkpointName = '../params/miniPascalVOC_' + netName if usingMiniDataset else '../params/PascalVOC_' + netName
 batch_size = 10 if usingMiniDataset else 64
 
-#mx.viz.plot_network(AlexNet,title='AlexNet',save_format='jpg',hide_weights=True).view()    #visulize network
+#mx.viz.plot_network(net,title=netName,save_format='jpg',hide_weights=True).view()    #visulize network
 
 train_iter = mx.io.ImageRecordIter(
     path_imgrec=trainFile,

@@ -8,27 +8,10 @@ import numpy as np
 from collections import namedtuple
 import math
 import json
+from utils import selectors
 
-paramFiles = [] #get all param files
-epochs = [] #get all epochs
-for fileName in os.listdir('../params/'):
-    if os.path.splitext(fileName)[1] == '.params':
-        paramFiles.append(fileName.split('-')[0])
-        epochs.append(int(re.search('-(.*)\.', fileName).group(1)))
-
-for i, paramFile in enumerate(paramFiles):
-    print('{}: {}-{}'.format(i, paramFile, epochs[i]))
-
-inputParamNo = input('input param file No.:')    #get selected paramFile and epoch
-param = paramFiles[inputParamNo]
-epoch = epochs[inputParamNo]
-
-imgFiles = os.listdir('../Data/ResizedObjects')
-for i, imgFile in enumerate(imgFiles):
-    print('{}: {}'.format(i, imgFile))
-
-inputImgNo = input('input image file No.:') #get selected img file
-imgName = imgFiles[inputImgNo]
+param, epoch = selectors.selectParam('../params/')
+imgName = selectors.selectImg('../Data/ResizedObjects')
 
 sym, arg_params, aux_params = mx.model.load_checkpoint('../params/{}'.format(param), epoch)
 args = sym.get_internals().list_outputs()

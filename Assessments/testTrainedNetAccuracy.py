@@ -1,5 +1,10 @@
 # coding=utf-8
 import mxnet as mx
+import os
+import re
+from utils import selectors
+
+param, epoch = selectors.selectParam('../params/')
 
 test_iter = mx.io.ImageRecordIter(
     path_imgrec = '../Data/RecordIO/test.rec',
@@ -13,7 +18,8 @@ test_iter = mx.io.ImageRecordIter(
 
     scale = 0.00390625  #scale the pixels to [-0.5, 0.5]
 )
-mod = mx.mod.Module.load('../params/PascalVOC_AlexNet', 35, context = mx.gpu(0))
+
+mod = mx.mod.Module.load(param, epoch, context = mx.gpu())
 mod.bind(
     data_shapes = test_iter.provide_data,
     label_shapes = test_iter.provide_label,

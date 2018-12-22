@@ -1,6 +1,5 @@
 import cv2
 import selectivesearch
-import nms
 
 img = cv2.imread('Data/VOCdevkit/VOC2012/JPEGImages/2007_000039.jpg')
 img_label, regions = selectivesearch.selective_search(img, scale = 500, sigma = 0.9, min_size = 200)
