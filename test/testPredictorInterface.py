@@ -4,6 +4,7 @@ import numpy as np
 import selectivesearch
 from predictors import resnet152
 from utils import selectors, nms
+import xml.etree.ElementTree as ET
 
 boxes = {}
 
@@ -30,11 +31,32 @@ def addBox(x, y, w, h, prob, label):
     else:
         boxes[label].append([x1, y1, x2, y2, prob])
 
+def drawGroundTruth(imgName, img):
+    xmlTree = ET.parse('../Data/VOCdevkit/VOC2012/Annotations/{}.xml'.format(imgName.split('.')[0]))  # reads corresponding XML file
+    for object in xmlTree.findall('object'):
+        name = object.find('name').text
+
+        bndbox = object.find('bndbox')
+        xmin = int(float(bndbox.find('xmin').text))     #reads coordinates
+        ymin = int(float(bndbox.find('ymin').text))
+        xmax = int(float(bndbox.find('xmax').text))
+        ymax = int(float(bndbox.find('ymax').text))
+
+        # draw rectangle
+        # parameters are image, left-top (x,y), right-bottom(x,y), color(RGB), thickness
+        cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+
+        # put text
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        # parameters are image, text, position, font, size, color(RGB), thickness
+        cv2.putText(img, name, (xmin, ymin), font, 0.3, (255, 255, 255), 1)
+
 imgsDir = '../Data/VOCdevkit/VOC2012/JPEGImages/'
-imgPath = imgsDir + selectors.selectImg(imgsDir)
+imgName = selectors.selectImg(imgsDir)
+imgPath = imgsDir + imgName
 img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
 
-img_label, regions = selectivesearch.selective_search(img, scale = 500, sigma = 0.9, min_size = 1024)
+img_label, regions = selectivesearch.selective_search(img, scale = 500, sigma = 0.9, min_size = 500)
 for i, region in enumerate(regions):    #rect:x y w h
     x = region['rect'][0]
     y = region['rect'][1]
@@ -65,13 +87,15 @@ for label in boxes:
 
         #draw rectangle
         # parameters are image, left-top (x,y), right-bottom(x,y), color(RGB), thickness
-        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 1)
+        cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
         #put text
         font = cv2.FONT_HERSHEY_SIMPLEX
         # parameters are image, text, position, font, size, color(RGB), thickness
         cv2.putText(img, label + ' ' + ('%.2f' % prob), (x1, y1), font, 0.3, (255, 255, 255), 1)
 
-plt.figure(imgPath)
+drawGroundTruth(imgName, img)
+
+plt.figure(imgName.split('.')[0])
 plt.imshow(img)
 plt.show()
