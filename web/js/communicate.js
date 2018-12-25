@@ -1,4 +1,5 @@
 function uploadImage() {
+    $('#upload').attr('disabled', 'disabled')
     var formData = new FormData();
     formData.append('file', $('#file')[0].files[0]);
     console.log(formData)
@@ -11,8 +12,9 @@ function uploadImage() {
         contentType: false
     }).done(function(res) {
         console.log(res)
-        $('#inputImg').attr('src', '../cgi/input.jpg')
-        $('#outputImg').attr('src', '../cgi/output.jpg')
+        $('#inputImg').attr('src', '../cgi/input.jpg?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
+        $('#outputImg').attr('src', '../cgi/output.jpg?' + Math.random())
+        $('#upload').removeAttr('disabled')
     }).fail(function(err) {
         console.log(err)
     });
