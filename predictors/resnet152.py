@@ -4,13 +4,15 @@ from collections import namedtuple
 # define a simple data batch
 Batch = namedtuple('Batch', ['data'])
 
-sym, arg_params, aux_params = mx.model.load_checkpoint('../params/resnet152', 0)
+projectPath = '/home/hongyigeng/PycharmProjects/ImageSearch/'   #to be imported, all file paths in this script must be absolute path
+
+sym, arg_params, aux_params = mx.model.load_checkpoint(projectPath + 'params/resnet152', 0)
 mod = mx.mod.Module(symbol=sym, context=mx.gpu(), label_names=None)
 #input data size must be 224x224
 mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))],
          label_shapes=mod._label_shapes)
 mod.set_params(arg_params, aux_params, allow_missing=True)
-with open('../synset.txt', 'r') as f:
+with open(projectPath + 'synset.txt', 'r') as f:
     labels = [l.rstrip() for l in f]
 
 def predict(img):

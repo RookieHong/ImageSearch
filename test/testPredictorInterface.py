@@ -73,10 +73,6 @@ for i, region in enumerate(regions):    #rect:x y w h
 
     addBox(x, y, w, h, prob, label)
 
-    # plt.figure('{}-{}'.format(prob, label))
-    # plt.imshow(img[y:y + h,x:x + w])
-    # plt.show()
-
 for label in boxes:
     color = (random.random(), random.random(), random.random())
     indexes = nms.nms(np.array(boxes[label]), 0.3)
