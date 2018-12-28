@@ -33,9 +33,10 @@ def addBox(x, y, w, h, prob, label):
         boxes[label].append([x1, y1, x2, y2, prob])
 
 def drawGroundTruth(imgName, img):
-    xmlTree = ET.parse('../Data/VOCdevkit/VOC2012/Annotations/{}.xml'.format(imgName.split('.')[0]))  # reads corresponding XML file
+    xmlTree = ET.parse(annotationsDir + '{}.xml'.format(imgName.split('.')[0]))  # reads corresponding XML file
     for object in xmlTree.findall('object'):
         name = object.find('name').text
+        name = nameDict[name]
 
         bndbox = object.find('bndbox')
         xmin = int(float(bndbox.find('xmin').text))     #reads coordinates
@@ -49,13 +50,29 @@ def drawGroundTruth(imgName, img):
         plt.gca().text(xmin, ymin - 2, 'Ground Truth:{:s}'.format(name),
                        bbox=dict(facecolor=(0, 1, 0), alpha=0.5), fontsize=12, color='white')
 
-imgsDir = '../Data/VOCdevkit/VOC2012/JPEGImages/'
+def getNameDict(filename):
+    dic = {}
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            line = line.strip('\n')
+            key = line.split(' ')[0]
+            val = line.split(' ')[1]
+            dic[key] = val
+    return dic
+
+annotationsDir = '../Data/ImageNet/ILSVRC2012/val-Annotations/'
+imgsDir = '../Data/ImageNet/ILSVRC2012/img_val/'
+
+nameDict = getNameDict('../synset.txt')
+
 imgName = selectors.selectImg(imgsDir)
 imgPath = imgsDir + imgName
 img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
 
 plt.figure(imgName.split('.')[0])
 plt.imshow(img)
+plt.axis('off')
 
 img_label, regions = selectivesearch.selective_search(img, scale = 500, sigma = 0.9, min_size = 500)
 for i, region in enumerate(regions):    #rect:x y w h

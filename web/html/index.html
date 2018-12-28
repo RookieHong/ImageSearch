@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Bootstrap daohanglan</title>
+        <title>ImageSearch</title>
         <link rel="stylesheet" href="../css/bootstrap.min.css">
         <script src="../js/jquery.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
@@ -10,13 +10,136 @@
     </head>
     <body>
 
-    <div id="uploadForm">
-        <input id="file" type="file"/>
-        <button id="upload" type="button" onclick="uploadImage()">upload</button>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="navbar-header">
+                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Brand</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                 <a href="#">Link</a>
+                            </li>
+                            <li>
+                                 <a href="#">Link</a>
+                            </li>
+                            <li class="dropdown">
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                         <a href="#">Action</a>
+                                    </li>
+                                    <li>
+                                         <a href="#">Another action</a>
+                                    </li>
+                                    <li>
+                                         <a href="#">Something else here</a>
+                                    </li>
+                                    <li class="divider">
+                                    </li>
+                                    <li>
+                                         <a href="#">Separated link</a>
+                                    </li>
+                                    <li class="divider">
+                                    </li>
+                                    <li>
+                                         <a href="#">One more separated link</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form class="navbar-form navbar-left" role="search">
+                            <div class="form-group">
+                                <input type="text" class="form-control" />
+                            </div> <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                 <a href="#">Link</a>
+                            </li>
+                            <li class="dropdown">
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                         <a href="#">Action</a>
+                                    </li>
+                                    <li>
+                                         <a href="#">Another action</a>
+                                    </li>
+                                    <li>
+                                         <a href="#">Something else here</a>
+                                    </li>
+                                    <li class="divider">
+                                    </li>
+                                    <li>
+                                         <a href="#">Separated link</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+        <div class="jumbotron">
+            <form class="form-inline text-center" role="form">
+                <div id="uploadForm" class="form-group">
+                    <label for="fileInput" class="sr-only">Image input</label>
+                    <input id="fileInput" type="file"/>
+                </div>
+                <div class="checkbox">
+                    <label>
+                      <input type="checkbox" id="ifSearch">Search image
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                      <input type="checkbox" id="ifWholeImage">Based on whole image
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                      <input type="checkbox" id="ifBoundingBoxRegression">Bounding box regression
+                    </label>
+                </div>
+                <button id="upload" type="button" onclick="uploadImage()" class="btn btn-primary">upload</button>
+            </form>
+            <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                <strong>Image uploaded, waiting for result</strong>
+            </div>
+            <div class="alert alert-success hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                <strong>Image processed successfully</strong>
+            </div>
+            <div class="alert alert-danger hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                <strong>Image upload failed</strong>
+            </div>
+        </div>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <a href="#" class="thumbnail">
+                        <img src="" id="inputImg"
+                             alt="Your image will be shown here">
+                    </a>
+                    <h5 class="text-center">Your image</h5>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <a href="#" class="thumbnail">
+                        <img src="" id="outputImg"
+                             alt="result will be shown here">
+                    </a>
+                    <h5 class="text-center">Result</h5>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <img src=""  alt="input.jpg" id="inputImg"/>
-    <img src=""  alt="output.jpg" id="outputImg"/>
+    <script src="../js/indexPage.js"></script>
 
     </body>
 </html>
+
