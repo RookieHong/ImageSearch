@@ -59,7 +59,7 @@ try:
 
     def matchImages(readyImg):   #Param readyImg means the param img must be the output of getImgReady()
         inputFeature, label = resnet152.predictionAndFeature(readyImg)
-        featureFile = open(projectPath + 'Data/ImageNet/ILSVRC2012/val-wholeImage-features/{}'.format(label))
+        featureFile = open(projectPath + 'Data/wholeImage-features/{}'.format(label))
 
         distances = {}
         data = pickle_load(featureFile)

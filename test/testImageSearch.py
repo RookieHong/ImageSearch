@@ -40,7 +40,7 @@ plt.axis('off')
 img = getImgReady(img)
 
 inputFeature, label = resnet152.predictionAndFeature(img)
-featureFile = open('../Data/ImageNet/ILSVRC2012/val-wholeImage-features/{}'.format(label))
+featureFile = open('../Data/wholeImage-features/{}'.format(label))
 
 distances = {}
 data = pickle_load(featureFile)
