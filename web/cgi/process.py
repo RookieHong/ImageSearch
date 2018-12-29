@@ -7,7 +7,10 @@ sys.stderr = sys.stdout
 print("Content-Type: text/html\n\n")
 
 try:
-    sys.path.append("/home/hongyigeng/PycharmProjects/ImageSearch/")    #to import the modules defined by me, it's necessary to add a sysPath
+    projectPath = '/home/hongyigeng/PycharmProjects/ImageSearch/'  # to be imported, all file paths in this script must be absolute path
+    sys.path.append(projectPath)  # to import the modules defined by me, it's necessary to add project path as a sysPath
+
+    toRet = {}  #The json to return to front page
 
     import traceback
     import cgi
@@ -22,6 +25,9 @@ try:
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     import pickle
+    import operator
+    from scipy.spatial.distance import pdist
+    import json
 
     def getImgReady(img):
         if img is None:
@@ -51,6 +57,23 @@ try:
         finally:
             return data
 
+    def matchImages(readyImg):   #Param readyImg means the param img must be the output of getImgReady()
+        inputFeature, label = resnet152.predictionAndFeature(readyImg)
+        featureFile = open(projectPath + 'Data/ImageNet/ILSVRC2012/val-wholeImage-features/{}'.format(label))
+
+        distances = {}
+        data = pickle_load(featureFile)
+        while data:
+            inputFeature = np.array(inputFeature)
+            dataFeature = np.array(data['feature'])
+            distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
+            distances[data['imgPath']] = float(distance)
+            data = pickle_load(featureFile)
+
+        matchList = sorted(distances.items(), key=operator.itemgetter(1))
+
+        return matchList
+
     form = cgi.FieldStorage()
     fileitem = form['file']
     ifSearch = True if form['ifSearch'].file.read() == 'true' else False
@@ -75,6 +98,11 @@ try:
             plt.gca().add_patch(rect)
             plt.gca().text(0, 0 - 2, '{:s} {:.3f}'.format(label, prob),
                            bbox=dict(facecolor=(0, 1, 0), alpha=0.5), fontsize=12, color='white')
+
+            if ifSearch:
+                matchList = matchImages(img)
+
+                toRet['matchList'] = matchList
 
         else:
             img_label, regions = selectivesearch.selective_search(img, scale=500, sigma=0.9, min_size=500)
@@ -115,7 +143,9 @@ try:
     else:
         message = 'image upload failed'
 
-    print(message)
+    toRet['message'] = message
+    json_toRet_str = json.dumps(toRet)
+    print(json_toRet_str)
 
 except:
     traceback.print_exc()

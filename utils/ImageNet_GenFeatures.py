@@ -29,6 +29,6 @@ for imgName in imgNames:
     feature, label = resnet152.predictionAndFeature(img)
     imgDict = {'imgPath': imgName, 'feature': feature}
 
-    featureFile = open('../Data/ImageNet/ILSVRC2012/val-features/{}'.format(label), 'ab+')
+    featureFile = open('../Data/ImageNet/ILSVRC2012/val-wholeImage-features/{}'.format(label), 'ab+')
     pickle.dump(imgDict, featureFile)
     featureFile.close()

@@ -1,3 +1,25 @@
+function showSearchResult(matchList) {
+    $('#searchResult').empty()
+    imgsDir = '../Data/ImageNet/ILSVRC2012/img_val/'
+
+    for(var i = 0, length = matchList.length; i < length; i++) {
+        $div = $('<div class="col-sm-4 col-md-4"></div>')
+
+        $a = $('<a href="#" class="thumbnail"></a>')
+
+        $img = $('<img></img>')
+        $img.attr('src', imgsDir + matchList[i][0])
+
+        $label = $('<h5 class="text-center"></h5>')
+        $label.text('Cosine distance: ' + Math.round(matchList[i][1] * 1000) / 1000)    //save 3 bits after dot
+
+        $a.append($img)
+        $div.append($a)
+        $div.append($label)
+        $('#searchResult').append($div)
+    }
+}
+
 function uploadImage() {
     $('#upload').attr('disabled', 'disabled')
     $('#upload').text('processing')
@@ -18,7 +40,10 @@ function uploadImage() {
         processData: false,
         contentType: false
     }).done(function(res) {
+        res = JSON.parse(res)
         console.log(res)
+
+        showSearchResult(res.matchList)
 
         $('.alert-warning').addClass('hide')
         $('.alert-success').removeClass('hide')
