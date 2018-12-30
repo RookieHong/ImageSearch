@@ -26,3 +26,5 @@ def addImageToDB(imgPath):
     featureFile = open(DBdir + label, 'ab+')
     pickle.dump(imgDict, featureFile)
     featureFile.close()
+
+    return label

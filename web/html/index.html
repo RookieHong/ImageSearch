@@ -20,6 +20,12 @@
             height: 300px;
             width: 570px;
          }
+         #imageModal1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
     </style>
 
     <div class="container">
@@ -97,12 +103,12 @@
                 </nav>
             </div>
         </div>
-        <h2>Upload image and options</h2>
+        <h2>Upload image and options(.jpg and .jpeg files only)</h2>
         <div class="jumbotron">
             <form class="form-inline text-center" role="form">
                 <div id="uploadForm" class="form-group">
                     <label for="fileInput" class="sr-only">Image input</label>
-                    <input id="fileInput" type="file"/>
+                    <input id="fileInput" type="file" accept="image/jpeg,image/jpg"/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -119,7 +125,8 @@
                       <input type="checkbox" id="ifBoundingBoxRegression">Bounding box regression
                     </label>
                 </div>
-                <button id="upload" type="button" onclick="uploadImage()" class="btn btn-primary">upload</button>
+                <button id="upload" type="button" onclick="processImage()" class="btn btn-primary">upload</button>
+                <button id="addToDB" type="button" onclick="addImageToDB()" class="btn btn-success">addToDB</button>
             </form>
             <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
                 <strong>Image uploaded, waiting for result</strong>
@@ -135,14 +142,14 @@
         <div class="well">
             <div class="row">
                 <div class="col-sm-6 col-md-6">
-                    <a href="#" class="thumbnail">
+                    <a href="javascript:;" class="thumbnail">
                         <img src="" id="inputImg" style="height: 300px;width: 570px;"
                              alt="Your image will be shown here">
                     </a>
                     <h5 class="text-center">Your image</h5>
                 </div>
                 <div class="col-sm-6 col-md-6">
-                    <a href="#" class="thumbnail">
+                    <a href="javascript:;" class="thumbnail">
                         <img src="" id="outputImg" style="height: 300px;width: 570px;"
                              alt="result will be shown here">
                     </a>
@@ -154,6 +161,22 @@
         <div class="well">
             <div class="row" id="searchResult"></div>
         </div>
+        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                    </div>
+                    <div class="modal-body">
+                        <img id="modalImage" src="" alt="" style="width:100%;">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </div>
 
     <script src="../js/indexPage.js"></script>
