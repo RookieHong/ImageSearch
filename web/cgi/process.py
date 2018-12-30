@@ -80,6 +80,7 @@ try:
 
     form = cgi.FieldStorage()
     fileitem = form['file']
+    ext = form['ext'].file.read()
     ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False    #ifAddImage will diverge the program
 
     if not ifAddImage:      #If ifAddImage is false, then this program should process the input image instead of adding it to database
@@ -90,9 +91,10 @@ try:
         boxes = {}
 
         if fileitem.filename:
-            open('./input.jpg', 'wb').write(fileitem.file.read())
+            savedImagePath = './input.{}'.format(ext)
+            open(savedImagePath, 'wb').write(fileitem.file.read())
 
-            img = cv2.cvtColor(cv2.imread('input.jpg'), cv2.COLOR_BGR2RGB)
+            img = cv2.cvtColor(cv2.imread(savedImagePath), cv2.COLOR_BGR2RGB)
             plt.figure('image')
             plt.imshow(img)
             plt.axis('off')
@@ -157,11 +159,11 @@ try:
             plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
 
         else:
-            message = 'image upload failed'
+            message = 'image upload failed\n'
 
     else:   #If ifAddImage is true, the uploaded image should be added to dataBase, this image is stored in Data/userImages/
         if fileitem.filename:
-            imgPath = '../Data/userImages/{}.jpg'.format(time.asctime())
+            imgPath = '../Data/userImages/{}.{}'.format(time.asctime(), ext)
             open(imgPath, 'wb').write(fileitem.file.read())
 
             img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
@@ -175,16 +177,16 @@ try:
             if imageExist:
                 os.remove(imgPath)
                 toRet['status'] = 'error'
-                message = message + 'This image is already saved in database!'
+                message = message + 'This image is already saved in database!\n'
             else:
                 label = addImageToDB.addImageToDB(imgPath)
-                message = message + 'Image has been successfully added to database, it belongs to "{}"'.format(label)
+                message = message + 'Image has been successfully added to database, it belongs to "{}"\n'.format(label)
 
     toRet['message'] = message
 
 except:
     toRet['status'] = 'error'
-    message = traceback.format_exc()
+    message = message + traceback.format_exc()
     toRet['message'] = message
 finally:
     json_toRet_str = json.dumps(toRet)

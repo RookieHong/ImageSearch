@@ -1,3 +1,34 @@
+function getFileExt(filename)
+{
+    var flag = false;
+    var ext = ''
+    var arr = ["jpg", "png", "gif", "jpeg"];
+    var index = filename.lastIndexOf(".");
+    var ext = filename.substr(index+1);
+    for(var i = 0; i < arr.length; i++) {
+        if(ext == arr[i]) {
+            return arr[i]
+        }
+    }
+    return ''
+}
+
+function enableButtons() {
+    $('#upload').removeAttr('disabled')
+    $('#upload').text('upload')
+
+    $('#addToDB').removeAttr('disabled')
+    $('#addToDB').text('addToDB')
+}
+
+function disableButtons() {
+    $('#upload').attr('disabled', 'disabled')
+    $('#upload').text('processing')
+
+    $('#addToDB').attr('disabled', 'disabled')
+    $('#addToDB').text('processing')
+}
+
 function showSearchResult(matchList) {
     $('#searchResult').empty()
 
@@ -19,19 +50,20 @@ function showSearchResult(matchList) {
     }
 }
 
-function processImage() {
-    $('#upload').attr('disabled', 'disabled')
-    $('#upload').text('processing')
-
-    $('#addToDB').attr('disabled', 'disabled')
-    $('#addToDB').text('processing')
+function uploadImage(ifAddImage) {
+    disableButtons()
 
     $('.alert').addClass('hide')
     $('.alert-warning').removeClass('hide')
 
+    ext = getFileExt($('#fileInput').val())
+
     var formData = new FormData();
+
     formData.append('file', $('#fileInput')[0].files[0]);
-    formData.append('ifAddImage', 'false')  //important
+    formData.append('ext', ext)
+
+    formData.append('ifAddImage', ifAddImage)  //important
     formData.append('ifSearch', $('#ifSearch').prop('checked'))
     formData.append('ifWholeImage', $('#ifWholeImage').prop('checked'))
     formData.append('ifBoundingBoxRegression', $('#ifBoundingBoxRegression').prop('checked'))
@@ -59,81 +91,18 @@ function processImage() {
             $('.alert-danger').removeClass('hide')
         }
 
-        $('#inputImg').attr('src', '../cgi/input.jpg?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
-        $('#outputImg').attr('src', '../cgi/output.jpg?' + Math.random())
+        if(ifAddImage == 'false') {
+            $('#inputImg').attr('src', '../cgi/input.' + ext + '?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
+            $('#outputImg').attr('src', '../cgi/output.jpg?' + Math.random())
+        }
 
-        $('#upload').removeAttr('disabled')
-        $('#upload').text('upload')
-
-        $('#addToDB').removeAttr('disabled')
-        $('#addToDB').text('addToDB')
+        enableButtons()
     }).fail(function(err) {
         console.log(err)
 
         $('.alert-warning').addClass('hide')
         $('.alert-danger').removeClass('hide')
 
-        $('#upload').removeAttr('disabled')
-        $('#upload').text('upload')
-
-        $('#addToDB').removeAttr('disabled')
-        $('#addToDB').text('addToDB')
-    });
-}
-
-function addImageToDB() {
-    $('#upload').attr('disabled', 'disabled')
-    $('#upload').text('processing')
-
-    $('#addToDB').attr('disabled', 'disabled')
-    $('#addToDB').text('processing')
-
-    $('.alert').addClass('hide')
-    $('.alert-warning').removeClass('hide')
-
-    var formData = new FormData();
-    formData.append('file', $('#fileInput')[0].files[0]);
-    formData.append('ifAddImage', 'true')  //important
-    formData.append('ifSearch', $('#ifSearch').prop('checked'))
-    formData.append('ifWholeImage', $('#ifWholeImage').prop('checked'))
-    formData.append('ifBoundingBoxRegression', $('#ifBoundingBoxRegression').prop('checked'))
-    $.ajax({
-        url: '../cgi/process.py',
-        type: 'POST',
-        cache: false,
-        data: formData,
-        processData: false,
-        contentType: false
-    }).done(function(res) {
-        res = JSON.parse(res)
-        console.log(res.message)
-
-        status = res.status
-        $('.alert-warning').addClass('hide')
-        if(status == 'success') {
-            $('.alert-success strong').text(res.message)
-            $('.alert-success').removeClass('hide')
-        }
-        else {
-            $('.alert-danger strong').text(res.message)
-            $('.alert-danger').removeClass('hide')
-        }
-
-        $('#upload').removeAttr('disabled')
-        $('#upload').text('upload')
-
-        $('#addToDB').removeAttr('disabled')
-        $('#addToDB').text('addToDB')
-    }).fail(function(err) {
-        console.log(err)
-
-        $('.alert-warning').addClass('hide')
-        $('.alert-danger').removeClass('hide')
-
-        $('#upload').removeAttr('disabled')
-        $('#upload').text('upload')
-
-        $('#addToDB').removeAttr('disabled')
-        $('#addToDB').text('addToDB')
+        enableButtons()
     });
 }

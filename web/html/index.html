@@ -20,12 +20,6 @@
             height: 300px;
             width: 570px;
          }
-         #imageModal1 {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-50%);
-        }
     </style>
 
     <div class="container">
@@ -103,12 +97,12 @@
                 </nav>
             </div>
         </div>
-        <h2>Upload image and options(.jpg and .jpeg files only)</h2>
+        <h2>Upload image and options</h2>
         <div class="jumbotron">
             <form class="form-inline text-center" role="form">
                 <div id="uploadForm" class="form-group">
                     <label for="fileInput" class="sr-only">Image input</label>
-                    <input id="fileInput" type="file" accept="image/jpeg,image/jpg"/>
+                    <input id="fileInput" type="file" accept="image/*"/>
                 </div>
                 <div class="checkbox">
                     <label>
@@ -125,8 +119,8 @@
                       <input type="checkbox" id="ifBoundingBoxRegression">Bounding box regression
                     </label>
                 </div>
-                <button id="upload" type="button" onclick="processImage()" class="btn btn-primary">upload</button>
-                <button id="addToDB" type="button" onclick="addImageToDB()" class="btn btn-success">addToDB</button>
+                <button id="upload" type="button" onclick="uploadImage('false')" class="btn btn-primary">upload</button>
+                <button id="addToDB" type="button" onclick="uploadImage('true')" class="btn btn-success">addToDB</button>
             </form>
             <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
                 <strong>Image uploaded, waiting for result</strong>
