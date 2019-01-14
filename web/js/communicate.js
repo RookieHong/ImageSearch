@@ -67,6 +67,7 @@ function uploadImage(ifAddImage) {
     formData.append('ifSearch', $('#ifSearch').prop('checked'))
     formData.append('ifWholeImage', $('#ifWholeImage').prop('checked'))
     formData.append('ifBoundingBoxRegression', $('#ifBoundingBoxRegression').prop('checked'))
+    formData.append('predictor', $('#predictor').text())
     $.ajax({
         url: '../cgi/process.py',
         type: 'POST',

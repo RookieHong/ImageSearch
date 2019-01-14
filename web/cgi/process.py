@@ -6,7 +6,7 @@ sys.stderr = sys.stdout
 
 print("Content-Type: text/html\n\n")
 
-projectPath = '/home/hongyigeng/PycharmProjects/ImageSearch/'  # to be imported, all file paths in this script must be absolute path
+projectPath = '/home/hongyigeng/PycharmProjects/ImageSearch/'  # to be imported, every file path in this script must be absolute path
 sys.path.append(projectPath)  # to import the modules defined by me, it's necessary to add project path as a sysPath
 
 toRet = {}  #The json to return to front page
@@ -20,7 +20,6 @@ try:
     import cv2
     import numpy as np
     import selectivesearch
-    from predictors import resnet152
     from utils import nms, addImageToDB
     import random
     import matplotlib
@@ -32,6 +31,7 @@ try:
     import json
     import time
     import os
+    import importlib
 
     def getImgReady(img):
         if img is None:
@@ -62,8 +62,8 @@ try:
             return data
 
     def matchImages(readyImg):   #Param readyImg means the param img must be the output of getImgReady()
-        inputFeature, label = resnet152.predictionAndFeature(readyImg)
-        featureFile = open(projectPath + 'Data/wholeImage-features/{}'.format(label))
+        inputFeature, label = predictor.predictionAndFeature(readyImg)
+        featureFile = open(featuresDir + label)
 
         distances = {}
         data = pickle_load(featureFile)
@@ -82,6 +82,10 @@ try:
     fileitem = form['file']
     ext = form['ext'].file.read()
     ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False    #ifAddImage will diverge the program
+
+    selectedPredictor = form['predictor'].file.read()   #Import the selected predictor module and set the features directory
+    predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
+    featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
 
     if not ifAddImage:      #If ifAddImage is false, then this program should process the input image instead of adding it to database
         ifSearch = True if form['ifSearch'].file.read() == 'true' else False
@@ -102,7 +106,7 @@ try:
             if ifWholeImage:
                 img = getImgReady(img)
                 predictTime = time.time()
-                prob, label = resnet152.predict(img)
+                prob, label = predictor.predict(img)
                 predictTime = time.time() - predictTime
                 message = message + 'prediction time cost:{}s\n'.format(predictTime)
 
@@ -120,7 +124,7 @@ try:
 
                     toRet['matchList'] = matchList
 
-            else:   #In this diverge, image will be cropped into many bounding boxes using selective search and every box will be predicted using resnet152
+            else:   #In this diverge, image will be cropped into many bounding boxes using selective search and every box will be predicted using predictor
                 predictTime = time.time()
                 img_label, regions = selectivesearch.selective_search(img, scale=500, sigma=0.9, min_size=500)
                 for i, region in enumerate(regions):  # rect:x y w h
@@ -131,9 +135,9 @@ try:
 
                     croppedImg = img[y:y + h, x:x + w]
                     croppedImg = getImgReady(croppedImg)
-                    prob, label = resnet152.predict(croppedImg)
+                    prob, label = predictor.predict(croppedImg)
 
-                    if prob < 0.2:  # ignore low probability boxes
+                    if prob < 0.6:  # ignore low probability boxes
                         continue
 
                     addBox(x, y, w, h, prob, label)
@@ -179,8 +183,8 @@ try:
                 toRet['status'] = 'error'
                 message = message + 'This image is already saved in database!\n'
             else:
-                label = addImageToDB.addImageToDB(imgPath)
-                message = message + 'Image has been successfully added to database, it belongs to "{}"\n'.format(label)
+                label = addImageToDB.addImageToDB(imgPath, selectedPredictor)
+                message = message + 'Image has been successfully added to {} database, it belongs to "{}"\n'.format(selectedPredictor, label)
 
     toRet['message'] = message
 

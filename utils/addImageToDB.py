@@ -1,10 +1,8 @@
 # Add a image to Database so it can be searched
-from predictors import resnet152
 import numpy as np
 import cv2
 import pickle
-
-DBdir = '../Data/wholeImage-features/'
+import importlib
 
 def getImgReady(img):
     if img is None:
@@ -16,11 +14,14 @@ def getImgReady(img):
     img = img[np.newaxis, :]
     return img
 
-def addImageToDB(imgPath):
+def addImageToDB(imgPath, selectedPredictor):
+    DBdir = '../Data/wholeImage-features-{}/'.format(selectedPredictor)
+    predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
+
     img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
     img = getImgReady(img)
 
-    feature, label = resnet152.predictionAndFeature(img)
+    feature, label = predictor.predictionAndFeature(img)
     imgDict = {'imgPath': imgPath, 'feature': feature}
 
     featureFile = open(DBdir + label, 'ab+')

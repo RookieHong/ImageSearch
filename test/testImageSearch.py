@@ -1,7 +1,7 @@
 from utils import selectors
 import pickle
 from scipy.spatial.distance import pdist
-from predictors import resnet152
+from predictors import resnet18
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -39,7 +39,7 @@ plt.axis('off')
 
 img = getImgReady(img)
 
-inputFeature, label = resnet152.predictionAndFeature(img)
+inputFeature, label = resnet18.predictionAndFeature(img)
 featureFile = open('../Data/wholeImage-features/{}'.format(label))
 
 distances = {}

@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import os
 from utils import addImageToDB
 
+count = 0
+
 def getImgReady(img, show=False):
     if img is None:
          return None
@@ -20,10 +22,16 @@ def getImgReady(img, show=False):
 
 imgsDirs = [
     '../Data/ImageNet/ILSVRC2012/img_val/',
-    '../Data/VOCdevkit/VOC2012/JPEGImages/'
+    '../Data/VOCdevkit/VOC2012/JPEGImages/',
+    '../Data/userImages/'
     ]
 for imgsDir in imgsDirs:
     imgNames = os.listdir(imgsDir)
     for imgName in imgNames:
         imgPath = imgsDir + imgName
-        addImageToDB.addImageToDB(imgPath)
+        addImageToDB.addImageToDB(imgPath, 'resnet18')
+        count = count + 1
+        if count % 1000 == 0:
+            print('{} images have been processed.'.format(count))
+
+print('All processed images amount is {}'.format(count))

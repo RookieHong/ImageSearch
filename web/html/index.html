@@ -119,6 +119,16 @@
                       <input type="checkbox" id="ifBoundingBoxRegression">Bounding box regression
                     </label>
                 </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                            data-toggle="dropdown" id="predictor">
+                        resnet18 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" id="predictorsList">
+                        <li><a href="#">resnet18</a></li>
+                        <li><a href="#">resnet152</a></li>
+                    </ul>
+                </div>
                 <button id="upload" type="button" onclick="uploadImage('false')" class="btn btn-primary">upload</button>
                 <button id="addToDB" type="button" onclick="uploadImage('true')" class="btn btn-success">addToDB</button>
             </form>
