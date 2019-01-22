@@ -4,9 +4,21 @@ $('.well').on('click', 'img', function() {  //Click an image to enlarge it
     $('#imageModal').modal()
 })
 
-$('#predictorsList').on('click', 'li', function() { //Change the text in the dropdown button when clicking an item in dropdown list
-    predictor = $(this).children().text()
-    $('#predictor').html(predictor + '<span class="caret">')
+$('ul.dropdown-menu').on('click', 'li', function() { //Change the text in the dropdown button when clicking an item in dropdown list
+    text = $(this).children().text()
+    textElement = $(this).parent().prev()
+    $(textElement).html(text + '<span class="caret">')
+
+    if(text == 'objects') {
+        $('.objects').show()
+        $('.wholeImage').hide()
+
+        $('#predictor').html('resnet101<span class="caret">')
+    }
+    else if(text == 'wholeImage') {
+        $('.objects').hide()
+        $('.wholeImage').show()
+    }
 })
 
 $('#fileInput').on('change', function() {   //Check if the uploaded file is an image
@@ -17,3 +29,6 @@ $('#fileInput').on('change', function() {   //Check if the uploaded file is an i
         alert('Please select a image(.jpg, .jpeg, .gif, .jpeg)')
     }
 })
+
+$('.objects').hide()
+$('.wholeImage').show()

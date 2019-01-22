@@ -78,19 +78,49 @@ try:
 
         return matchList
 
+    def rcnn(img):
+        predictTime = time.time()
+        img_label, regions = selectivesearch.selective_search(img, scale=500, sigma=0.9, min_size=500)
+        for i, region in enumerate(regions):  # rect:x y w h
+            x = region['rect'][0]
+            y = region['rect'][1]
+            w = region['rect'][2]
+            h = region['rect'][3]
+
+            croppedImg = img[y:y + h, x:x + w]
+            croppedImg = getImgReady(croppedImg)
+            prob, label = predictor.predict(croppedImg)
+
+            if prob < 0.6:  # ignore low probability boxes
+                continue
+
+            addBox(x, y, w, h, prob, label)
+
+        predictTime = time.time() - predictTime
+
+        return predictTime
+
+    def fasterRcnn():
+        from predictors import resnet101_fasterRcnn
+        global boxes
+        predictTime = time.time()
+        boxes = resnet101_fasterRcnn.predict('./input.{}'.format(ext))
+        predictTime = time.time() - predictTime
+
+        return predictTime
+
+
     form = cgi.FieldStorage()
     fileitem = form['file']
     ext = form['ext'].file.read()
-    ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False    #ifAddImage will diverge the program
-
-    selectedPredictor = form['predictor'].file.read()   #Import the selected predictor module and set the features directory
-    predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
-    featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
+    ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False    #ifAddImage diverges the program
 
     if not ifAddImage:      #If ifAddImage is false, then this program should process the input image instead of adding it to database
-        ifSearch = True if form['ifSearch'].file.read() == 'true' else False
-        ifWholeImage = True if form['ifWholeImage'].file.read() == 'true' else False
-        ifBoundingBoxRegression = True if form['ifBoundingBoxRegression'].file.read() == 'true' else False
+        ifWholeImage = True if form['searchType'].file.read() == 'wholeImage' else False
+
+        selectedPredictor = form['predictor'].file.read()  # Import the selected predictor module and set the features directory
+        predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
+        featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
 
         boxes = {}
 
@@ -116,33 +146,17 @@ try:
                 plt.gca().text(0, 0 - 2, '{:s} {:.3f}'.format(label, prob),
                                bbox=dict(facecolor=(0, 1, 0), alpha=0.5), fontsize=12, color='white')
 
-                if ifSearch:
-                    searchTime = time.time()
-                    matchList = matchImages(img)
-                    searchTime = time.time() - searchTime
-                    message = message + 'search time cost:{}s\n'.format(searchTime)
+                searchTime = time.time()
+                matchList = matchImages(img)
+                searchTime = time.time() - searchTime
+                message = message + 'search time cost:{}s\n'.format(searchTime)
 
-                    toRet['matchList'] = matchList
+                toRet['matchList'] = matchList
 
             else:   #In this diverge, image will be cropped into many bounding boxes using selective search and every box will be predicted using predictor
-                predictTime = time.time()
-                img_label, regions = selectivesearch.selective_search(img, scale=500, sigma=0.9, min_size=500)
-                for i, region in enumerate(regions):  # rect:x y w h
-                    x = region['rect'][0]
-                    y = region['rect'][1]
-                    w = region['rect'][2]
-                    h = region['rect'][3]
+                algorithm = form['algorithm'].file.read()
+                predictTime = rcnn(img) if algorithm == 'rcnn' else fasterRcnn()
 
-                    croppedImg = img[y:y + h, x:x + w]
-                    croppedImg = getImgReady(croppedImg)
-                    prob, label = predictor.predict(croppedImg)
-
-                    if prob < 0.6:  # ignore low probability boxes
-                        continue
-
-                    addBox(x, y, w, h, prob, label)
-
-                predictTime = time.time() - predictTime
                 message = message + 'prediction time cost:{}s\n'.format(predictTime)
                 for label in boxes:
                     color = (random.random(), random.random(), random.random())

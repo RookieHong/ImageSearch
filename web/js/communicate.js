@@ -4,7 +4,7 @@ function getFileExt(filename)
     var ext = ''
     var arr = ["jpg", "png", "gif", "jpeg"];
     var index = filename.lastIndexOf(".");
-    var ext = filename.substr(index+1);
+    var ext = filename.substr(index+1).toLowerCase();
     for(var i = 0; i < arr.length; i++) {
         if(ext == arr[i]) {
             return arr[i]
@@ -63,11 +63,11 @@ function uploadImage(ifAddImage) {
     formData.append('file', $('#fileInput')[0].files[0]);
     formData.append('ext', ext)
 
-    formData.append('ifAddImage', ifAddImage)  //important
-    formData.append('ifSearch', $('#ifSearch').prop('checked'))
+    formData.append('searchType', $('#searchType').text())  //important
     formData.append('ifWholeImage', $('#ifWholeImage').prop('checked'))
-    formData.append('ifBoundingBoxRegression', $('#ifBoundingBoxRegression').prop('checked'))
+    formData.append('ifAddImage', ifAddImage)
     formData.append('predictor', $('#predictor').text())
+    formData.append('algorithm', $('#algorithm').text())
     $.ajax({
         url: '../cgi/process.py',
         type: 'POST',
