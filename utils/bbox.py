@@ -180,18 +180,22 @@ def im_detect(rois, scores, bbox_deltas, im_info,
     # we used scaled image & roi to train, so it is necessary to transform them back
     pred_boxes = pred_boxes / scale
 
+    saved_indexes = []
+
     # convert to per class detection results
     det = []
-    for j in range(1, scores.shape[-1]):
-        indexes = np.where(scores[:, j] > conf_thresh)[0]
+    for j in range(1, scores.shape[-1]):    #For every class
+        indexes = np.where(scores[:, j] > conf_thresh)[0]   #Get roi indexes whose class prediction confidence is greater than threshold
         cls_scores = scores[indexes, j, np.newaxis]
         cls_boxes = pred_boxes[indexes, j * 4:(j + 1) * 4]
         cls_dets = np.hstack((cls_boxes, cls_scores))
         keep = nms(cls_dets, thresh=nms_thresh)
+        saved_indexes.append(indexes[keep])
 
         cls_id = np.ones_like(cls_scores) * j
         det.append(np.hstack((cls_id, cls_scores, cls_boxes))[keep, :])
 
     # assemble all classes
     det = np.concatenate(det, axis=0)
-    return det
+    saved_indexes = np.concatenate(np.array(saved_indexes))
+    return det, saved_indexes

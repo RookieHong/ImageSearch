@@ -118,5 +118,5 @@ def get_resnet(anchor_scales, anchor_ratios, rpn_feature_stride,
     bbox_pred = mx.symbol.Reshape(data=bbox_pred, shape=(rcnn_batch_size, -1, 4 * num_classes), name='bbox_pred_reshape')
 
     # group output
-    group = mx.symbol.Group([rois, cls_prob, bbox_pred])
+    group = mx.symbol.Group([rois, cls_prob, bbox_pred, top_feat])
     return group

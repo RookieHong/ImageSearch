@@ -140,20 +140,27 @@ data_batch = generate_batch(im_tensor, im_info)
 
 # forward
 mod.forward(data_batch)
-rois, scores, bbox_deltas = mod.get_outputs()
+rois, scores, bbox_deltas, features = mod.get_outputs()
 rois = rois[:, 1:]
 scores = scores[0]
 bbox_deltas = bbox_deltas[0]
+features = features.reshape(300, 2048)
+
 im_info = im_info[0]
 
 # decode detection
-det = im_detect(rois, scores, bbox_deltas, im_info,
+det, saved_indexes = im_detect(rois, scores, bbox_deltas, im_info,
                 bbox_stds=(0.1, 0.1, 0.2, 0.2), nms_thresh=0.3,
                 conf_thresh=1e-3)
 
+features = features[saved_indexes]
+saved_indexes = []
+
 # print out
-for [cls, conf, x1, y1, x2, y2] in det:
+for i, [cls, conf, x1, y1, x2, y2] in enumerate(det):
     if cls > 0 and conf > 0.7:
+        saved_indexes.append(i)
         print(class_names[int(cls)], conf, [x1, y1, x2, y2])
 
+features = features[saved_indexes]
 vis_detection(im_orig, det, class_names, thresh=0.7)

@@ -92,7 +92,7 @@ mod = mx.module.Module(sym, data_names, label_names, context=mx.gpu())
 mod.bind(data_shapes, label_shapes, for_training=False)
 mod.init_params(arg_params=arg_params, aux_params=aux_params)
 
-def predict(imgPath):
+def predict(imgPath):   #Return predictions: a dict whose keys are classes, values are [x1 y1 x2 y2 conf]
     # load single test
     im_tensor, im_info, im_orig = load_test(imgPath, short=600, max_size=1000,
                                             mean=(0.0, 0.0, 0.0), std=(1.0, 1.0, 1.0))
@@ -102,26 +102,66 @@ def predict(imgPath):
 
     # forward
     mod.forward(data_batch)
-    rois, scores, bbox_deltas = mod.get_outputs()
+    rois, scores, bbox_deltas, features = mod.get_outputs()
     rois = rois[:, 1:]
     scores = scores[0]
     bbox_deltas = bbox_deltas[0]
+
     im_info = im_info[0]
 
     # decode detection
-    dets = im_detect(rois, scores, bbox_deltas, im_info,
+    dets, saved_indexes = im_detect(rois, scores, bbox_deltas, im_info,
+                                    bbox_stds=(0.1, 0.1, 0.2, 0.2), nms_thresh=0.3,
+                                    conf_thresh=1e-3)
+
+    predictions = {}
+
+    # print out
+    for i, [cls, conf, x1, y1, x2, y2] in enumerate(dets):
+        if cls > 0 and conf > 0.7:
+            class_name = class_names[int(cls)]
+            if not predictions.has_key(class_name):
+                predictions[class_name] = [[x1, y1, x2, y2, conf]]
+            else:
+                predictions[class_name].append([x1, y1, x2, y2, conf])
+
+    return predictions
+
+def predictionAndFeature(imgPath):  #Return predictions and features: predictions is an array containing items like [x1 y1 x2 y2], features' items corresponds to predictions' in order
+    # load single test
+    im_tensor, im_info, im_orig = load_test(imgPath, short=600, max_size=1000,
+                                            mean=(0.0, 0.0, 0.0), std=(1.0, 1.0, 1.0))
+
+    # generate data batch
+    data_batch = generate_batch(im_tensor, im_info)
+
+    # forward
+    mod.forward(data_batch)
+    rois, scores, bbox_deltas, features = mod.get_outputs()
+    rois = rois[:, 1:]
+    scores = scores[0]
+    bbox_deltas = bbox_deltas[0]
+    features = features.reshape(300, 2048)
+    
+    im_info = im_info[0]
+
+    # decode detection
+    dets, saved_indexes = im_detect(rois, scores, bbox_deltas, im_info,
                     bbox_stds=(0.1, 0.1, 0.2, 0.2), nms_thresh=0.3,
                     conf_thresh=1e-3)
 
-    toRet = {}
+    features = features[saved_indexes]
+    saved_indexes = []
+
+    predictions = []
 
     # print out
-    for [cls, conf, x1, y1, x2, y2] in dets:
+    for i, [cls, conf, x1, y1, x2, y2] in enumerate(dets):
         if cls > 0 and conf > 0.7:
+            saved_indexes.append(i)
             class_name = class_names[int(cls)]
-            if not toRet.has_key(class_name):
-                toRet[class_name] = [[x1, y1, x2, y2, conf]]
-            else:
-                toRet[class_name].append([x1, y1, x2, y2, conf])
+            predictions.append([x1, y1, x2, y2, class_name, conf])
 
-    return toRet
+    features = features[saved_indexes]
+
+    return predictions, features

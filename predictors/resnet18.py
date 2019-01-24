@@ -1,6 +1,18 @@
 import mxnet as mx
 import numpy as np
 from collections import namedtuple
+import cv2
+
+def getImgReady(img):
+    if img is None:
+        return None
+    # convert into format (batch, RGB, width, height)
+    img = cv2.resize(img, (224, 224))
+    img = np.swapaxes(img, 0, 2)
+    img = np.swapaxes(img, 1, 2)
+    img = img[np.newaxis, :]
+    return img
+
 # define a simple data batch
 Batch = namedtuple('Batch', ['data'])
 
@@ -15,7 +27,10 @@ mod.set_params(arg_params, aux_params, allow_missing=True)
 with open(projectPath + 'synset.txt', 'r') as f:
     labels = [l.rstrip() for l in f]
 
-def predict(img):
+def predict(imgPath):
+    img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
+    img = getImgReady(img)
+
     # compute the predict probabilities
     mod.forward(Batch([mx.nd.array(img)]))
     probs = mod.get_outputs()[0].asnumpy()
@@ -28,7 +43,10 @@ def predict(img):
 
     return prob, label
 
-def predictionAndFeature(img):
+def predictionAndFeature(imgPath):
+    img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
+    img = getImgReady(img)
+
     # list the last 10 layers
     all_layers = sym.get_internals()
     symbols = []

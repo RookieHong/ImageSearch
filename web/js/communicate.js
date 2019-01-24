@@ -67,7 +67,6 @@ function uploadImage(ifAddImage) {
     formData.append('ifWholeImage', $('#ifWholeImage').prop('checked'))
     formData.append('ifAddImage', ifAddImage)
     formData.append('predictor', $('#predictor').text())
-    formData.append('algorithm', $('#algorithm').text())
     $.ajax({
         url: '../cgi/process.py',
         type: 'POST',

@@ -20,7 +20,7 @@ try:
     import cv2
     import numpy as np
     import selectivesearch
-    from utils import nms, addImageToDB
+    from utils import nms, addImageToDB_wholeImage
     import random
     import matplotlib
     matplotlib.use('Agg')
@@ -33,26 +33,6 @@ try:
     import os
     import importlib
 
-    def getImgReady(img):
-        if img is None:
-            return None
-        # convert into format (batch, RGB, width, height)
-        img = cv2.resize(img, (224, 224))
-        img = np.swapaxes(img, 0, 2)
-        img = np.swapaxes(img, 1, 2)
-        img = img[np.newaxis, :]
-        return img
-
-    def addBox(x, y, w, h, prob, label):
-        x1 = x
-        x2 = x + w
-        y1 = y
-        y2 = y + h
-        if not boxes.has_key(label):
-            boxes[label] = [[x1, y1, x2, y2, prob]]
-        else:
-            boxes[label].append([x1, y1, x2, y2, prob])
-
     def pickle_load(f):
         try:
             data = pickle.load(f)
@@ -61,14 +41,14 @@ try:
         finally:
             return data
 
-    def matchImages(readyImg):   #Param readyImg means the param img must be the output of getImgReady()
-        inputFeature, label = predictor.predictionAndFeature(readyImg)
+    def matchImages_wholeImage(imgPath):
+        inputFeature, label = predictor.predictionAndFeature(imgPath)
         featureFile = open(featuresDir + label)
 
         distances = {}
         data = pickle_load(featureFile)
+        inputFeature = np.array(inputFeature)
         while data:
-            inputFeature = np.array(inputFeature)
             dataFeature = np.array(data['feature'])
             distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
             distances[data['imgPath']] = float(distance)
@@ -78,117 +58,52 @@ try:
 
         return matchList
 
-    def rcnn(img):
-        predictTime = time.time()
-        img_label, regions = selectivesearch.selective_search(img, scale=500, sigma=0.9, min_size=500)
-        for i, region in enumerate(regions):  # rect:x y w h
-            x = region['rect'][0]
-            y = region['rect'][1]
-            w = region['rect'][2]
-            h = region['rect'][3]
-
-            croppedImg = img[y:y + h, x:x + w]
-            croppedImg = getImgReady(croppedImg)
-            prob, label = predictor.predict(croppedImg)
-
-            if prob < 0.6:  # ignore low probability boxes
-                continue
-
-            addBox(x, y, w, h, prob, label)
-
-        predictTime = time.time() - predictTime
-
-        return predictTime
-
     def fasterRcnn():
         from predictors import resnet101_fasterRcnn
-        global boxes
         predictTime = time.time()
-        boxes = resnet101_fasterRcnn.predict('./input.{}'.format(ext))
+        predictions = resnet101_fasterRcnn.predict('./input.{}'.format(ext))
         predictTime = time.time() - predictTime
 
-        return predictTime
-
+        return predictions, predictTime
 
     form = cgi.FieldStorage()
     fileitem = form['file']
     ext = form['ext'].file.read()
-    ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False    #ifAddImage diverges the program
+    ifWholeImage = True if form['searchType'].file.read() == 'wholeImage' else False
 
-    if not ifAddImage:      #If ifAddImage is false, then this program should process the input image instead of adding it to database
-        ifWholeImage = True if form['searchType'].file.read() == 'wholeImage' else False
+    if not fileitem.filename:
+        raise Exception('image upload failed\n')
 
+    savedImagePath = './input.{}'.format(ext)
+    open(savedImagePath, 'wb').write(fileitem.file.read())
+
+    if ifWholeImage:
         selectedPredictor = form['predictor'].file.read()  # Import the selected predictor module and set the features directory
         predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
         featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
 
-        boxes = {}
+        ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False  # ifAddImage diverges the program
+        if not ifAddImage:  # If ifAddImage is false, then this program should process the input image instead of adding it to database
 
-        if fileitem.filename:
-            savedImagePath = './input.{}'.format(ext)
-            open(savedImagePath, 'wb').write(fileitem.file.read())
+            predictTime = time.time()
+            prob, label = predictor.predict(savedImagePath)
+            predictTime = time.time() - predictTime
+            message = message + 'prediction time cost:{}s\n'.format(predictTime)
 
-            img = cv2.cvtColor(cv2.imread(savedImagePath), cv2.COLOR_BGR2RGB)
-            plt.figure('image')
-            plt.imshow(img)
-            plt.axis('off')
+            searchTime = time.time()
+            matchList = matchImages_wholeImage(savedImagePath)
+            searchTime = time.time() - searchTime
+            message = message + 'search time cost:{}s\n'.format(searchTime)
 
-            if ifWholeImage:
-                img = getImgReady(img)
-                predictTime = time.time()
-                prob, label = predictor.predict(img)
-                predictTime = time.time() - predictTime
-                message = message + 'prediction time cost:{}s\n'.format(predictTime)
+            toRet['matchList'] = matchList
 
-                rect = plt.Rectangle((0, 0), img.shape[0], img.shape[1],        #draw prediction
-                                     fill=False, edgecolor=(0, 1, 0), linewidth=3.5)
-                plt.gca().add_patch(rect)
-                plt.gca().text(0, 0 - 2, '{:s} {:.3f}'.format(label, prob),
-                               bbox=dict(facecolor=(0, 1, 0), alpha=0.5), fontsize=12, color='white')
-
-                searchTime = time.time()
-                matchList = matchImages(img)
-                searchTime = time.time() - searchTime
-                message = message + 'search time cost:{}s\n'.format(searchTime)
-
-                toRet['matchList'] = matchList
-
-            else:   #In this diverge, image will be cropped into many bounding boxes using selective search and every box will be predicted using predictor
-                algorithm = form['algorithm'].file.read()
-                predictTime = rcnn(img) if algorithm == 'rcnn' else fasterRcnn()
-
-                message = message + 'prediction time cost:{}s\n'.format(predictTime)
-                for label in boxes:
-                    color = (random.random(), random.random(), random.random())
-                    indexes = nms.nms(np.array(boxes[label]), 0.3)  #Nms threshold is 0.3
-                    for i in indexes:
-                        x1 = boxes[label][i][0]
-                        y1 = boxes[label][i][1]
-                        x2 = boxes[label][i][2]
-                        y2 = boxes[label][i][3]
-                        prob = boxes[label][i][4]
-
-                        rect = plt.Rectangle((x1, y1), x2 - x1, y2 - y1,    #draw predictions
-                                             fill=False, edgecolor=color, linewidth=3.5)
-                        plt.gca().add_patch(rect)
-                        plt.gca().text(x1, y1 - 2, '{:s} {:.3f}'.format(label, prob),
-                                       bbox=dict(facecolor=color, alpha=0.5), fontsize=12, color='white')
-
-            plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
-
-        else:
-            message = 'image upload failed\n'
-
-    else:   #If ifAddImage is true, the uploaded image should be added to dataBase, this image is stored in Data/userImages/
-        if fileitem.filename:
+        else:  # If ifAddImage is true, the uploaded image should be added to dataBase, this image is stored in Data/userImages/
             imgPath = '../Data/userImages/{}.{}'.format(time.asctime(), ext)
             open(imgPath, 'wb').write(fileitem.file.read())
 
-            img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
-            img = getImgReady(img)
-            matchList = matchImages(img)
+            matchList = matchImages_wholeImage(imgPath)
             imageExist = False
-            for match in matchList: #Check if the uploaded image is already saved in database
+            for match in matchList:  # Check if the uploaded image is already saved in database
                 if match[1] < 0.0001:
                     imageExist = True
                     break
@@ -197,8 +112,29 @@ try:
                 toRet['status'] = 'error'
                 message = message + 'This image is already saved in database!\n'
             else:
-                label = addImageToDB.addImageToDB(imgPath, selectedPredictor)
+                label = addImageToDB_wholeImage.addImageToDB(imgPath, selectedPredictor)
                 message = message + 'Image has been successfully added to {} database, it belongs to "{}"\n'.format(selectedPredictor, label)
+
+    else:   #In this diverge, the image will be processed using RCNN series algorithms to detect objects in it and search images in objects level.
+        img = cv2.cvtColor(cv2.imread(savedImagePath), cv2.COLOR_BGR2RGB)
+        plt.figure('image')
+        plt.imshow(img)
+        plt.axis('off')
+
+        predictions, predictTime = fasterRcnn()
+
+        message = message + 'prediction time cost:{}s\n'.format(predictTime)
+        for label in predictions:
+            color = (random.random(), random.random(), random.random())
+            for [x1, y1, x2, y2, conf] in predictions[label]:
+
+                rect = plt.Rectangle((x1, y1), x2 - x1, y2 - y1,    #draw predictions
+                                     fill=False, edgecolor=color, linewidth=3.5)
+                plt.gca().add_patch(rect)
+                plt.gca().text(x1, y1 - 2, '{:s} {:.3f}'.format(label, conf),
+                               bbox=dict(facecolor=color, alpha=0.5), fontsize=12, color='white')
+
+        plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
 
     toRet['message'] = message
 
