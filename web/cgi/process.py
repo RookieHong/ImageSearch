@@ -42,7 +42,7 @@ try:
             return data
 
     def matchImages_wholeImage(imgPath):
-        inputFeature, label = predictor.predictionAndFeature(imgPath)
+        prob, label, inputFeature = predictor.predictionAndFeature(imgPath)
         featureFile = open(featuresDir + label)
 
         distances = {}
@@ -58,18 +58,27 @@ try:
 
         return matchList
 
-    def fasterRcnn():
-        from predictors import resnet101_fasterRcnn
-        predictTime = time.time()
-        predictions = resnet101_fasterRcnn.predict('./input.{}'.format(ext))
-        predictTime = time.time() - predictTime
+    def matchImages(inputFeature, label):
+        featureFile = open(featuresDir + label)
 
-        return predictions, predictTime
+        distances = {}
+        data = pickle_load(featureFile)
+        inputFeature = np.array(inputFeature)
+        while data:
+            dataFeature = np.array(data['feature'])
+            distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
+            distances[data['imgPath']] = float(distance)
+            data = pickle_load(featureFile)
+
+        matchList = sorted(distances.items(), key=operator.itemgetter(1))
+
+        return matchList
 
     form = cgi.FieldStorage()
     fileitem = form['file']
     ext = form['ext'].file.read()
     ifWholeImage = True if form['searchType'].file.read() == 'wholeImage' else False
+    ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False
 
     if not fileitem.filename:
         raise Exception('image upload failed\n')
@@ -82,16 +91,16 @@ try:
         predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
         featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
 
-        ifAddImage = True if form['ifAddImage'].file.read() == 'true' else False  # ifAddImage diverges the program
         if not ifAddImage:  # If ifAddImage is false, then this program should process the input image instead of adding it to database
 
             predictTime = time.time()
-            prob, label = predictor.predict(savedImagePath)
+            prob, label, feature = predictor.predictionAndFeature(savedImagePath)
             predictTime = time.time() - predictTime
+            toRet['classification'] = 'Class:{} confidence:{}'.format(label, prob)
             message = message + 'prediction time cost:{}s\n'.format(predictTime)
 
             searchTime = time.time()
-            matchList = matchImages_wholeImage(savedImagePath)
+            matchList = matchImages(feature, label)
             searchTime = time.time() - searchTime
             message = message + 'search time cost:{}s\n'.format(searchTime)
 
@@ -116,17 +125,27 @@ try:
                 message = message + 'Image has been successfully added to {} database, it belongs to "{}"\n'.format(selectedPredictor, label)
 
     else:   #In this diverge, the image will be processed using RCNN series algorithms to detect objects in it and search images in objects level.
-        img = cv2.cvtColor(cv2.imread(savedImagePath), cv2.COLOR_BGR2RGB)
-        plt.figure('image')
-        plt.imshow(img)
-        plt.axis('off')
+        selectedPredictor = form['predictor'].file.read() + '_fasterRcnn'  # Import the selected predictor module and set the features directory
+        predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
+        featuresDir = projectPath + 'Data/objects-features-{}/'.format(selectedPredictor)
 
-        predictions, predictTime = fasterRcnn()
+        if not ifAddImage:
+            img = cv2.cvtColor(cv2.imread(savedImagePath), cv2.COLOR_BGR2RGB)
+            plt.figure('image')
+            plt.imshow(img)
+            plt.axis('off')
 
-        message = message + 'prediction time cost:{}s\n'.format(predictTime)
-        for label in predictions:
-            color = (random.random(), random.random(), random.random())
-            for [x1, y1, x2, y2, conf] in predictions[label]:
+            predictTime = time.time()
+            predictions, features = predictor.predictionAndFeature('./input.{}'.format(ext))
+            predictTime = time.time() - predictTime
+
+            areas = []
+
+            message = message + 'prediction time cost:{}s\n'.format(predictTime)
+            for [x1, y1, x2, y2, label, conf] in predictions:
+                color = (random.random(), random.random(), random.random())
+
+                areas.append((x2 - x1) * (y2 - y1))
 
                 rect = plt.Rectangle((x1, y1), x2 - x1, y2 - y1,    #draw predictions
                                      fill=False, edgecolor=color, linewidth=3.5)
@@ -134,7 +153,16 @@ try:
                 plt.gca().text(x1, y1 - 2, '{:s} {:.3f}'.format(label, conf),
                                bbox=dict(facecolor=color, alpha=0.5), fontsize=12, color='white')
 
-        plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
+            plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
+
+            maxAreaIndex = areas.index(max(areas))  #select the object with max area and search images using this object's feature
+
+            searchTime = time.time()
+            matchList = matchImages(features[maxAreaIndex], predictions[maxAreaIndex][4])
+            searchTime = time.time() - searchTime
+            message = message + 'search time cost:{}s\n'.format(searchTime)
+
+            toRet['matchList'] = matchList
 
     toRet['message'] = message
 

@@ -142,6 +142,7 @@ def predictionAndFeature(imgPath):  #Return predictions and features: prediction
     scores = scores[0]
     bbox_deltas = bbox_deltas[0]
     features = features.reshape(300, 2048)
+    features = features.asnumpy()
     
     im_info = im_info[0]
 

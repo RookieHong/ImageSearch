@@ -60,12 +60,14 @@ def predictionAndFeature(imgPath):
     fe_mod.set_params(arg_params, aux_params)
 
     fe_mod.forward(Batch([mx.nd.array(img)]))
-    feature = fe_mod.get_outputs()[0].asnumpy()
 
+    feature = fe_mod.get_outputs()[0].asnumpy()
     probs = fe_mod.get_outputs()[1].asnumpy()
+
     probs = np.squeeze(probs)
     a = np.argsort(probs)[::-1]
     index = a[0]
+    prob = probs[index]
     label = labels[index].split(' ')[1]
 
-    return feature, label
+    return prob, label, feature

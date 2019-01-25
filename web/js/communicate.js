@@ -14,59 +14,78 @@ function getFileExt(filename)
 }
 
 function enableButtons() {
-    $('#upload').removeAttr('disabled')
-    $('#upload').text('upload')
+    $('.upload').removeAttr('disabled')
+    $('.upload').text('upload')
 
-    $('#addToDB').removeAttr('disabled')
-    $('#addToDB').text('addToDB')
+    $('.addToDB').removeAttr('disabled')
+    $('.addToDB').text('addToDB')
 }
 
 function disableButtons() {
-    $('#upload').attr('disabled', 'disabled')
-    $('#upload').text('processing')
+    $('.upload').attr('disabled', 'disabled')
+    $('.upload').text('processing')
 
-    $('#addToDB').attr('disabled', 'disabled')
-    $('#addToDB').text('processing')
+    $('.addToDB').attr('disabled', 'disabled')
+    $('.addToDB').text('processing')
 }
 
-function showSearchResult(matchList) {
-    $('#searchResult').empty()
+matchList_wholeImage = []
+matchList_objects = []
 
-    for(var i = 0, length = matchList.length; i < length; i++) {
+showCount_wholeImage = 0
+showCount_objects = 0
+
+function showSearchResult(tabPage, empty) {
+    if(empty) $('#searchResult_' + tabPage).empty()
+
+    if(tabPage == 'wholeImage') {
+        matchList = matchList_wholeImage
+        showCount = showCount_wholeImage
+    }
+    else {
+        matchList = matchList_objects
+        showCount = showCount_objects
+    }
+
+    for(j = 0, length = matchList.length; showCount < length && j < 9; showCount++, j++) {
         $div = $('<div class="col-sm-4 col-md-4"></div>')
 
         $a = $('<a href="javascript:;" class="thumbnail"></a>')
 
         $img = $('<img style="width: 300px;height: 225px;"></img>')
-        $img.attr('src', matchList[i][0])
+        $img.attr('src', matchList[showCount][0])
 
         $label = $('<h5 class="text-center"></h5>')
-        $label.text('Cosine distance: ' + Math.round(matchList[i][1] * 1000) / 1000)    //save 3 bits after dot
+        $label.text('Cosine distance: ' + Math.round(matchList[showCount][1] * 1000) / 1000)    //save 3 bits after dot
 
         $a.append($img)
         $div.append($a)
         $div.append($label)
-        $('#searchResult').append($div)
+        $('#searchResult_' + tabPage).append($div)
     }
+
+    if(tabPage == 'wholeImage') showCount_wholeImage = showCount
+    else showCount_objects = showCount
+
+    if(showCount >= matchList.length) $('#showMore_' + tabPage).addClass('hide')
 }
 
-function uploadImage(ifAddImage) {
+function uploadImage_wholeImage(ifAddImage) {
     disableButtons()
 
     $('.alert').addClass('hide')
     $('.alert-warning').removeClass('hide')
 
-    ext = getFileExt($('#fileInput').val())
+    ext = getFileExt($('.fileInput').val())
 
     var formData = new FormData();
 
-    formData.append('file', $('#fileInput')[0].files[0]);
+    formData.append('file', $('#fileInput_wholeImage')[0].files[0]);
     formData.append('ext', ext)
 
-    formData.append('searchType', $('#searchType').text())  //important
-    formData.append('ifWholeImage', $('#ifWholeImage').prop('checked'))
+    formData.append('searchType', 'wholeImage')  //important
     formData.append('ifAddImage', ifAddImage)
-    formData.append('predictor', $('#predictor').text())
+    formData.append('predictor', $('#predictor_wholeImage').text())
     $.ajax({
         url: '../cgi/process.py',
         type: 'POST',
@@ -78,7 +97,12 @@ function uploadImage(ifAddImage) {
         res = JSON.parse(res)
         console.log(res.message)
 
-        if(res.matchList) showSearchResult(res.matchList)
+        if(res.matchList) {
+            showCount_wholeImage = 0
+            matchList_wholeImage = res.matchList
+            showSearchResult('wholeImage', true)
+            $('#showMore_wholeImage').removeClass('hide')
+        }
 
         status = res.status
         $('.alert-warning').addClass('hide')
@@ -92,8 +116,69 @@ function uploadImage(ifAddImage) {
         }
 
         if(ifAddImage == 'false') {
-            $('#inputImg').attr('src', '../cgi/input.' + ext + '?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
-            $('#outputImg').attr('src', '../cgi/output.jpg?' + Math.random())
+            $('#inputImg_wholeImage').attr('src', '../cgi/input.' + ext + '?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
+            $('#classification_wholeImage').text(res.classification)
+        }
+
+        enableButtons()
+    }).fail(function(err) {
+        console.log(err)
+
+        $('.alert-warning').addClass('hide')
+        $('.alert-danger').removeClass('hide')
+
+        enableButtons()
+    });
+}
+
+function uploadImage_objects(ifAddImage) {
+    disableButtons()
+
+    $('.alert').addClass('hide')
+    $('.alert-warning').removeClass('hide')
+
+    ext = getFileExt($('.fileInput').val())
+
+    var formData = new FormData();
+
+    formData.append('file', $('#fileInput_objects')[0].files[0]);
+    formData.append('ext', ext)
+
+    formData.append('searchType', 'objects')  //important
+    formData.append('ifAddImage', ifAddImage)
+    formData.append('predictor', $('#predictor_objects').text())
+    $.ajax({
+        url: '../cgi/process.py',
+        type: 'POST',
+        cache: false,
+        data: formData,
+        processData: false,
+        contentType: false
+    }).done(function(res) {
+        res = JSON.parse(res)
+        console.log(res.message)
+
+        if(res.matchList) {
+            showCount_objects = 0
+            matchList_objects = res.matchList
+            showSearchResult('objects', true)
+            $('#showMore_objects').removeClass('hide')
+        }
+
+        status = res.status
+        $('.alert-warning').addClass('hide')
+        if(status == 'success') {
+            $('.alert-success strong').text(res.message)
+            $('.alert-success').removeClass('hide')
+        }
+        else {
+            $('.alert-danger strong').text(res.message)
+            $('.alert-danger').removeClass('hide')
+        }
+
+        if(ifAddImage == 'false') {
+            $('#inputImg_objects').attr('src', '../cgi/input.' + ext + '?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
+            $('#outputImg_objects').attr('src', '../cgi/output.jpg?' + Math.random())
         }
 
         enableButtons()

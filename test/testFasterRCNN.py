@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import random
 
 params = ''
-imgsDir = '../Data/VOCdevkit/VOC2012/JPEGImages/'
+imgsDir = '../Data/ImageNet/ILSVRC2012/img_val/'
 
 def infer_param_shape(symbol, data_shapes):
     arg_shape, _, aux_shape = symbol.infer_shape(**dict(data_shapes))
