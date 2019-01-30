@@ -31,7 +31,7 @@
 
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="wholeImage">
-                <h2>Upload image and options</h2>
+                <h2>Upload image</h2>
                 <div class="jumbotron">
                     <form class="form-inline text-center" role="form">
                         <div id="uploadForm_wholeImage" class="form-group">
@@ -48,13 +48,13 @@
                         <button id="upload_wholeImage" type="button" onclick="uploadImage_wholeImage('false')" class="btn btn-primary upload">upload</button>
                         <button id="addToDB_wholeImage" type="button" onclick="uploadImage_wholeImage('true')" class="btn btn-success addToDB">addToDB</button>
                     </form>
-                    <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                    <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;" id="warningMsg_wholeImage">
                         <strong>Image uploaded, waiting for result</strong>
                     </div>
-                    <div class="alert alert-success hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                    <div class="alert alert-success hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;" id="successMsg_wholeImage">
                         <strong>Image processed successfully</strong>
                     </div>
-                    <div class="alert alert-danger hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                    <div class="alert alert-danger hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;" id="dangerMsg_wholeImage">
                         <strong>Image upload failed</strong>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
             </div>
 
             <div class="tab-pane fade" id="objects">
-                <h2>Upload image and options</h2>
+                <h2>Upload image</h2>
                 <div class="jumbotron">
                     <form class="form-inline text-center" role="form">
                         <div id="uploadForm" class="form-group">
@@ -92,15 +92,15 @@
                             </ul>
                         </div>
                         <button id="upload_objects" type="button" onclick="uploadImage_objects('false')" class="btn btn-primary upload">upload</button>
-                        <button id="addToDB_objects" type="button" onclick="uploadImage_objects('true')" class="btn btn-success upload">addToDB</button>
+                        <button id="addToDB_objects" type="button" onclick="uploadImage_objects('true')" class="btn btn-success addToDB">addToDB</button>
                     </form>
-                    <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                    <div class="alert alert-warning hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;" id="warningMsg_objects">
                         <strong>Image uploaded, waiting for result</strong>
                     </div>
-                    <div class="alert alert-success hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                    <div class="alert alert-success hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;" id="successMsg_objects">
                         <strong>Image processed successfully</strong>
                     </div>
-                    <div class="alert alert-danger hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;">
+                    <div class="alert alert-danger hide" role="alert" style="margin-bottom: 0px;margin-top: 16px;" id="dangerMsg_objects">
                         <strong>Image upload failed</strong>
                     </div>
                 </div>
@@ -122,6 +122,10 @@
                             <h5 class="text-center">Result</h5>
                         </div>
                     </div>
+                </div>
+                <h2>Objects</h2>
+                <div class="well">
+                    <div class="row" id="segmentedObjects"></div>
                 </div>
                 <h2>Search results</h2>
                 <div class="well">

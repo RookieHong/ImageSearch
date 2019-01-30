@@ -139,13 +139,26 @@ try:
             predictions, features = predictor.predictionAndFeature('./input.{}'.format(ext))
             predictTime = time.time() - predictTime
 
-            areas = []
+            objects = []
+            matchList = []
 
             message = message + 'prediction time cost:{}s\n'.format(predictTime)
-            for [x1, y1, x2, y2, label, conf] in predictions:
+
+            searchTime = time.time()
+            for i, [x1, y1, x2, y2, label, conf] in enumerate(predictions):
                 color = (random.random(), random.random(), random.random())
 
-                areas.append((x2 - x1) * (y2 - y1))
+                objects.append({
+                    'x1': x1,
+                    'y1': y1,
+                    'x2': x2,
+                    'y2': y2,
+                    'label': label,
+                    'conf': conf,
+                    'num': i
+                })
+
+                matchList.append(matchImages(features[i], label))   #Search objects for every object
 
                 rect = plt.Rectangle((x1, y1), x2 - x1, y2 - y1,    #draw predictions
                                      fill=False, edgecolor=color, linewidth=3.5)
@@ -153,16 +166,12 @@ try:
                 plt.gca().text(x1, y1 - 2, '{:s} {:.3f}'.format(label, conf),
                                bbox=dict(facecolor=color, alpha=0.5), fontsize=12, color='white')
 
-            plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
-
-            maxAreaIndex = areas.index(max(areas))  #select the object with max area and search images using this object's feature
-
-            searchTime = time.time()
-            matchList = matchImages(features[maxAreaIndex], predictions[maxAreaIndex][4])
             searchTime = time.time() - searchTime
             message = message + 'search time cost:{}s\n'.format(searchTime)
+            plt.savefig('output.jpg',bbox_inches='tight', pad_inches=0)
 
             toRet['matchList'] = matchList
+            toRet['objects'] = objects
 
     toRet['message'] = message
 

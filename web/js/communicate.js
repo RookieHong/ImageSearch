@@ -1,7 +1,6 @@
 function getFileExt(filename)
 {
     var flag = false;
-    var ext = ''
     var arr = ["jpg", "png", "gif", "jpeg"];
     var index = filename.lastIndexOf(".");
     var ext = filename.substr(index+1).toLowerCase();
@@ -29,8 +28,11 @@ function disableButtons() {
     $('.addToDB').text('processing')
 }
 
+ext = ''
+
 matchList_wholeImage = []
-matchList_objects = []
+matchList_allObjects = []
+matchList_singleObject = []
 
 showCount_wholeImage = 0
 showCount_objects = 0
@@ -43,7 +45,7 @@ function showSearchResult(tabPage, empty) {
         showCount = showCount_wholeImage
     }
     else {
-        matchList = matchList_objects
+        matchList = matchList_singleObject
         showCount = showCount_objects
     }
 
@@ -70,13 +72,48 @@ function showSearchResult(tabPage, empty) {
     if(showCount >= matchList.length) $('#showMore_' + tabPage).addClass('hide')
 }
 
+function showObjects(objects) {
+    var img = document.getElementById('inputImg_objects')
+    $(img).load(function() {
+        $('#segmentedObjects').empty()
+        for(var i = 0; i < objects.length; i++) {
+            var canvas = document.createElement('canvas')
+            var ctx = canvas.getContext('2d')
+
+            canvas.width = 300
+            canvas.height = 150
+
+            var x1 = objects[i].x1
+            var y1 = objects[i].y1
+            var width = objects[i].x2 - objects[i].x1
+            var height = objects[i].y2 - objects[i].y1
+
+            //x1 = x1 / img.naturalWidth * canvas.width
+            //y1 = y1 / img.naturalHeight * canvas.height
+            //width = width / img.naturalWidth * canvas.width
+            //height = height / img.naturalHeight * canvas.height
+
+            ctx.drawImage(img, x1, y1, width, height, 0, 0, canvas.width, canvas.height)
+
+            $div = $('<div class="col-sm-4 col-md-4"></div>')
+            $a = $('<a href="javascript:;" class="thumbnail object" num="' + objects[i].num + '"></a>')
+            $label = $('<h5 class="text-center"></h5>')
+            $label.text(objects[i].label)
+            $a.append(canvas)
+            $div.append($a)
+            $div.append($label)
+            $('#segmentedObjects').append($div)
+        }
+    })
+}
+
 function uploadImage_wholeImage(ifAddImage) {
     disableButtons()
 
     $('.alert').addClass('hide')
     $('.alert-warning').removeClass('hide')
 
-    ext = getFileExt($('.fileInput').val())
+    ext = getFileExt($('#fileInput_wholeImage').val())
 
     var formData = new FormData();
 
@@ -95,23 +132,23 @@ function uploadImage_wholeImage(ifAddImage) {
         contentType: false
     }).done(function(res) {
         res = JSON.parse(res)
-        console.log(res.message)
+        console.log(res)
 
         if(res.matchList) {
             showCount_wholeImage = 0
             matchList_wholeImage = res.matchList
-            showSearchResult('wholeImage', true)
             $('#showMore_wholeImage').removeClass('hide')
+            showSearchResult('wholeImage', true)
         }
 
         status = res.status
         $('.alert-warning').addClass('hide')
         if(status == 'success') {
-            $('.alert-success strong').text(res.message)
+            $('#successMsg_wholeImage strong').text(res.message)
             $('.alert-success').removeClass('hide')
         }
         else {
-            $('.alert-danger strong').text(res.message)
+            $('#dangerMsg_wholeImage strong').text(res.message)
             $('.alert-danger').removeClass('hide')
         }
 
@@ -137,7 +174,7 @@ function uploadImage_objects(ifAddImage) {
     $('.alert').addClass('hide')
     $('.alert-warning').removeClass('hide')
 
-    ext = getFileExt($('.fileInput').val())
+    ext = getFileExt($('#fileInput_objects').val())
 
     var formData = new FormData();
 
@@ -156,23 +193,31 @@ function uploadImage_objects(ifAddImage) {
         contentType: false
     }).done(function(res) {
         res = JSON.parse(res)
-        console.log(res.message)
+        console.log(res)
 
         if(res.matchList) {
-            showCount_objects = 0
             matchList_objects = res.matchList
-            showSearchResult('objects', true)
-            $('#showMore_objects').removeClass('hide')
+        }
+
+        if(res.objects) {
+            showObjects(res.objects)
+            $('.well').on('click', 'a.object', function () {    //Switch global value matchList when clicking on an object
+              num = parseInt($(this).attr('num'))
+              matchList_singleObject = matchList_objects[num]
+              showCount_objects = 0
+              $('#showMore_objects').removeClass('hide')
+              showSearchResult('objects', true)
+            })
         }
 
         status = res.status
         $('.alert-warning').addClass('hide')
         if(status == 'success') {
-            $('.alert-success strong').text(res.message)
+            $('#successMsg_objects strong').text(res.message)
             $('.alert-success').removeClass('hide')
         }
         else {
-            $('.alert-danger strong').text(res.message)
+            $('#dangerMsg_objects strong').text(res.message)
             $('.alert-danger').removeClass('hide')
         }
 
