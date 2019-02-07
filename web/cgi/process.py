@@ -53,6 +53,7 @@ try:
             distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
             distances[data['imgPath']] = float(distance)
             data = pickle_load(featureFile)
+        featureFile.close()
 
         matchList = sorted(distances.items(), key=operator.itemgetter(1))
 
@@ -69,6 +70,43 @@ try:
             distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
             distances[data['imgPath']] = float(distance)
             data = pickle_load(featureFile)
+        featureFile.close()
+
+        matchList = sorted(distances.items(), key=operator.itemgetter(1))
+
+        return matchList
+
+    def matchImages_objects(inputFeature, label):   #Match objects using database splited by kmeans
+        centroidsFile = open(projectPath + 'Data/splited-objects-features-resnet101_fasterRcnn/centroids')
+
+        centroids_distances = {}
+        centroid = pickle_load(centroidsFile)
+        inputFeature = np.array(inputFeature)
+        while centroid:     #Find which centroid this obejct is allocated to
+            centroidFileName = centroid.keys()[0]
+
+            if label not in centroidFileName or os.path.getsize(projectPath + 'Data/splited-objects-features-resnet101_fasterRcnn/' + centroidFileName) == 0:    #No object allocated into this file
+                centroid = pickle_load(centroidsFile)
+                continue
+
+            centroidFeature = np.array(centroid[centroidFileName])
+            distance = pdist(np.vstack([inputFeature, centroidFeature]), 'cosine')
+            centroids_distances[centroidFileName] = float(distance)
+            centroid = pickle_load(centroidsFile)
+        centroidsFile.close()
+
+        allocatedTo = min(centroids_distances, key=centroids_distances.get)
+
+        featureFile = open(projectPath + 'Data/splited-objects-features-resnet101_fasterRcnn/' + allocatedTo)
+
+        distances = {}
+        data = pickle_load(featureFile)
+        while data:
+            dataFeature = np.array(data['feature'])
+            distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
+            distances[data['imgPath']] = float(distance)
+            data = pickle_load(featureFile)
+        featureFile.close()
 
         matchList = sorted(distances.items(), key=operator.itemgetter(1))
 
@@ -158,7 +196,8 @@ try:
                     'num': i
                 })
 
-                matchList.append(matchImages(features[i], label))   #Search objects for every object
+                # matchList.append(matchImages(features[i], label))  # Search objects for every object
+                matchList.append(matchImages_objects(features[i], label))   #Search objects for every object
 
                 rect = plt.Rectangle((x1, y1), x2 - x1, y2 - y1,    #draw predictions
                                      fill=False, edgecolor=color, linewidth=3.5)
