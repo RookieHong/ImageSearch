@@ -1,4 +1,4 @@
-# For every image in imgsDirs, generate feature files using pickle, they are saved in Data/wholeImage-features/
+# For every image in imgsDirs, generate feature files using pickle, they are saved in Data/objects-features-resnet101_fasterRcnn/
 import os
 from utils import addImageToDB_objects
 import time

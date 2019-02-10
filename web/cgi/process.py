@@ -20,7 +20,7 @@ try:
     import cv2
     import numpy as np
     import selectivesearch
-    from utils import nms, addImageToDB_wholeImage
+    from utils import nms, addImageToDB_wholeImage, addImageToDB_objects
     import random
     import matplotlib
     matplotlib.use('Agg')
@@ -121,15 +121,15 @@ try:
     if not fileitem.filename:
         raise Exception('image upload failed\n')
 
-    savedImagePath = './input.{}'.format(ext)
-    open(savedImagePath, 'wb').write(fileitem.file.read())
-
     if ifWholeImage:
         selectedPredictor = form['predictor'].file.read()  # Import the selected predictor module and set the features directory
         predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
         featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
 
         if not ifAddImage:  # If ifAddImage is false, then this program should process the input image instead of adding it to database
+
+            savedImagePath = './input.{}'.format(ext)
+            open(savedImagePath, 'wb').write(fileitem.file.read())
 
             predictTime = time.time()
             prob, label, feature = predictor.predictionAndFeature(savedImagePath)
@@ -168,6 +168,9 @@ try:
         featuresDir = projectPath + 'Data/objects-features-{}/'.format(selectedPredictor)
 
         if not ifAddImage:
+            savedImagePath = './input.{}'.format(ext)
+            open(savedImagePath, 'wb').write(fileitem.file.read())
+
             img = cv2.cvtColor(cv2.imread(savedImagePath), cv2.COLOR_BGR2RGB)
             plt.figure('image')
             plt.imshow(img)
@@ -196,8 +199,8 @@ try:
                     'num': i
                 })
 
-                # matchList.append(matchImages(features[i], label))  # Search objects for every object
-                matchList.append(matchImages_objects(features[i], label))   #Search objects for every object
+                #matchList.append(matchImages(features[i], label))  # Search objects for every object using unsplited DB
+                matchList.append(matchImages_objects(features[i], label))   #Search objects for every object using splitted DB
 
                 rect = plt.Rectangle((x1, y1), x2 - x1, y2 - y1,    #draw predictions
                                      fill=False, edgecolor=color, linewidth=3.5)
@@ -211,6 +214,32 @@ try:
 
             toRet['matchList'] = matchList
             toRet['objects'] = objects
+
+        else:
+            imgPath = '../Data/userImages/{}.{}'.format(time.asctime(), ext)
+            open(imgPath, 'wb').write(fileitem.file.read())
+
+            predictions, features = predictor.predictionAndFeature(imgPath)
+            imgExist = True
+            for i, [x1, y1, x2, y2, label, conf] in enumerate(predictions):
+                objectExist = False
+                matchList = matchImages_objects(features[i], label)
+                if matchList[0][1] < 0.0001:
+                    objectExist = True
+                    break
+
+                if not objectExist:
+                    imgExist = False
+                    break
+
+            if imgExist:
+                os.remove(imgPath)
+                toRet['status'] = 'error'
+                message = message + 'This image is already saved in database!\n'
+            else:
+                label = addImageToDB_objects.addImageToDB(imgPath, selectedPredictor, predictions = predictions, features = features)
+                message = message + 'Image has been successfully added to {} database\n'.format(selectedPredictor)
+
 
     toRet['message'] = message
 
