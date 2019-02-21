@@ -20,7 +20,7 @@ try:
     import cv2
     import numpy as np
     import selectivesearch
-    from utils import nms, addImageToDB_wholeImage, addImageToDB_objects
+    from utils import addImageToDB_wholeImage, addImageToDB_objects
     import random
     import matplotlib
     matplotlib.use('Agg')
@@ -76,7 +76,7 @@ try:
 
         return matchList
 
-    def matchImages_objects(inputFeature, label):   #Match objects using database splited by kmeans
+    def matchImages_objects(inputFeature, label):   # Match objects using database splited by kmeans
         centroidsFile = open(projectPath + 'Data/splited-objects-features-resnet101_fasterRcnn/centroids')
 
         centroids_distances = {}
@@ -85,7 +85,7 @@ try:
         while centroid:     #Find which centroid this obejct is allocated to
             centroidFileName = centroid.keys()[0]
 
-            if label not in centroidFileName or os.path.getsize(projectPath + 'Data/splited-objects-features-resnet101_fasterRcnn/' + centroidFileName) == 0:    #No object allocated into this file
+            if label not in centroidFileName or os.path.getsize(projectPath + 'Data/splited-objects-features-resnet101_fasterRcnn/' + centroidFileName) == 0:    # No object allocated into this file
                 centroid = pickle_load(centroidsFile)
                 continue
 
@@ -126,7 +126,7 @@ try:
         predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
         featuresDir = projectPath + 'Data/wholeImage-features-{}/'.format(selectedPredictor)
 
-        if not ifAddImage:  # If ifAddImage is false, then this program should process the input image instead of adding it to database
+        if not ifAddImage:  # If ifAddImage is false, this program should process the input image instead of adding it to database
 
             savedImagePath = './input.{}'.format(ext)
             open(savedImagePath, 'wb').write(fileitem.file.read())

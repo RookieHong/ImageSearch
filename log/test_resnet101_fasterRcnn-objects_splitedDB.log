@@ -1,0 +1,105 @@
+Assessment Mon Feb 11 11:58:19 2019
+Random class: sofa		Allocated to: sofa_2		Finding centroid cost time: 0.140051841736s
+sofa_2 has 765 objects		Search cost time: 0.249149799347s		Time/Count: 0.000325686012218
+Totally cost time: 0.389201641083s
+
+Assessment Mon Feb 11 11:58:25 2019
+Random class: motorbike		Allocated to: motorbike_1		Finding centroid cost time: 0.0794651508331s
+motorbike_1 has 602 objects		Search cost time: 0.237787008286s		Time/Count: 0.000394995030375
+Totally cost time: 0.317252159119s
+
+Assessment Mon Feb 11 11:58:27 2019
+Random class: bottle		Allocated to: bottle_4		Finding centroid cost time: 0.0779838562012s
+bottle_4 has 425 objects		Search cost time: 0.140853881836s		Time/Count: 0.000331420898437
+Totally cost time: 0.218837738037s
+
+Assessment Mon Feb 11 11:58:28 2019
+Random class: bird		Allocated to: bird_17		Finding centroid cost time: 0.0796520709991s
+bird_17 has 432 objects		Search cost time: 0.143829107285s		Time/Count: 0.000332937748344
+Totally cost time: 0.223481178284s
+
+Assessment Mon Feb 11 11:58:30 2019
+Random class: aeroplane		Allocated to: aeroplane_0		Finding centroid cost time: 0.0956969261169s
+aeroplane_0 has 525 objects		Search cost time: 0.172533988953s		Time/Count: 0.000328636169434
+Totally cost time: 0.26823091507s
+
+Assessment Mon Feb 11 11:58:32 2019
+Random class: diningtable		Allocated to: diningtable_0		Finding centroid cost time: 0.0786280632019s
+diningtable_0 has 520 objects		Search cost time: 0.223971128464s		Time/Count: 0.000430713708584
+Totally cost time: 0.302599191666s
+
+Assessment Mon Feb 11 11:58:33 2019
+Random class: boat		Allocated to: boat_7		Finding centroid cost time: 0.0761678218842s
+boat_7 has 509 objects		Search cost time: 0.167516946793s		Time/Count: 0.000329109915113
+Totally cost time: 0.243684768677s
+
+Assessment Mon Feb 11 11:58:35 2019
+Random class: bird		Allocated to: bird_10		Finding centroid cost time: 0.0765850543976s
+bird_10 has 401 objects		Search cost time: 0.133095979691s		Time/Count: 0.000331910173792
+Totally cost time: 0.209681034088s
+
+Assessment Mon Feb 11 11:58:37 2019
+Random class: pottedplant		Allocated to: pottedplant_8		Finding centroid cost time: 0.0852160453796s
+pottedplant_8 has 479 objects		Search cost time: 0.157545089722s		Time/Count: 0.000328904153907
+Totally cost time: 0.242761135101s
+
+Assessment Mon Feb 11 11:58:40 2019
+Random class: aeroplane		Allocated to: aeroplane_0		Finding centroid cost time: 0.0769810676575s
+aeroplane_0 has 525 objects		Search cost time: 0.183916091919s		Time/Count: 0.00035031636556
+Totally cost time: 0.260897159576s
+
+Assessment Mon Feb 11 11:58:43 2019
+Random class: bird		Allocated to: bird_17		Finding centroid cost time: 0.0785300731659s
+bird_17 has 432 objects		Search cost time: 0.14426112175s		Time/Count: 0.000333937781828
+Totally cost time: 0.222791194916s
+
+Assessment Mon Feb 11 11:58:44 2019
+Random class: sofa		Allocated to: sofa_2		Finding centroid cost time: 0.0820829868317s
+sofa_2 has 765 objects		Search cost time: 0.283874034882s		Time/Count: 0.00037107716978
+Totally cost time: 0.365957021713s
+
+Assessment Mon Feb 11 11:58:47 2019
+Random class: cow		Allocated to: cow_1		Finding centroid cost time: 0.0770959854126s
+cow_1 has 628 objects		Search cost time: 0.206819057465s		Time/Count: 0.000329329709339
+Totally cost time: 0.283915042877s
+
+Assessment Mon Feb 11 11:58:49 2019
+Random class: sheep		Allocated to: sheep_2		Finding centroid cost time: 0.0843510627747s
+sheep_2 has 501 objects		Search cost time: 0.167508125305s		Time/Count: 0.000334347555499
+Totally cost time: 0.25185918808s
+
+Assessment Mon Feb 11 11:58:52 2019
+Random class: bus		Allocated to: bus_0		Finding centroid cost time: 0.0861599445343s
+bus_0 has 365 objects		Search cost time: 0.119481086731s		Time/Count: 0.000327345443099
+Totally cost time: 0.205641031265s
+
+Assessment Mon Feb 11 11:59:00 2019
+Random class: person		Allocated to: person_34		Finding centroid cost time: 0.0809738636017s
+person_34 has 362 objects		Search cost time: 0.147599935532s		Time/Count: 0.00040773462854
+Totally cost time: 0.228573799133s
+
+Assessment Mon Feb 11 11:59:02 2019
+Random class: horse		Allocated to: horse_3		Finding centroid cost time: 0.086846113205s
+horse_3 has 633 objects		Search cost time: 0.208995103836s		Time/Count: 0.000330166040815
+Totally cost time: 0.295841217041s
+
+Assessment Mon Feb 11 11:59:06 2019
+Random class: cat		Allocated to: cat_5		Finding centroid cost time: 0.0945138931274s
+cat_5 has 396 objects		Search cost time: 0.134344816208s		Time/Count: 0.000339254586384
+Totally cost time: 0.228858709335s
+
+Assessment Mon Feb 11 11:59:11 2019
+Random class: aeroplane		Allocated to: aeroplane_0		Finding centroid cost time: 0.0781021118164s
+aeroplane_0 has 525 objects		Search cost time: 0.173868894577s		Time/Count: 0.000331178846813
+Totally cost time: 0.251971006393s
+
+Assessment Mon Feb 11 11:59:13 2019
+Random class: tvmonitor		Allocated to: tvmonitor_1		Finding centroid cost time: 0.0781931877136s
+tvmonitor_1 has 590 objects		Search cost time: 0.304546117783s		Time/Count: 0.000516179860648
+Totally cost time: 0.382739305496s
+
+Assessment Mon Feb 11 11:59:16 2019
+Random class: bird		Allocated to: bird_10		Finding centroid cost time: 0.0786240100861s
+bird_10 has 401 objects		Search cost time: 0.13307094574s		Time/Count: 0.000331847744987
+Totally cost time: 0.211694955826s
+

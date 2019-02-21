@@ -2,6 +2,7 @@ import numpy as np
 from scipy.spatial.distance import pdist
 import os
 import pickle
+import time
 
 def pickle_load(f):
     try:
@@ -36,7 +37,7 @@ def kmeans(data, k):
     epoch = 0
     notConverged = True
     while notConverged:
-        if epoch >= 100:    #Max iteration times is 100
+        if epoch >= 300:    #Max iteration times is 300
             break
         notConverged = False
         epoch = epoch + 1
@@ -62,6 +63,8 @@ def kmeans(data, k):
             centroids = setCentroids(dataAllocation, data, centroids)
     return dataAllocation, centroids
 
+timeCost = time.time()
+
 targetDBDir = '../Data/objects-features-resnet101_fasterRcnn/'
 newDBDir = '../Data/splited-objects-features-resnet101_fasterRcnn/'
 featureFileNames = os.listdir(targetDBDir)
@@ -81,7 +84,7 @@ for featureFileName in featureFileNames:
     featureFile.close()
     features = np.array(features)
 
-    centroidAmount = count / 400    #Expect about 300 images allocated to a centroid
+    centroidAmount = count / 500    #Expect about 300 images allocated to a centroid
     print('Count: {} Centroids: {}'.format(count, centroidAmount))
     dataAllocation, centroids = kmeans(features, centroidAmount)
 
@@ -97,3 +100,6 @@ for featureFileName in featureFileNames:
 
     for i in range(len(files)):
         files[i].close()
+
+timeCost = time.time() - timeCost
+print('Time cost: {}s'.format(timeCost))

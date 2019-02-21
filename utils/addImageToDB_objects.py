@@ -13,6 +13,23 @@ def pickle_load(f):
     finally:
         return data
 
+def addImageToDB_beforeSplit(imgPath, selectedPredictor):
+    DBdir = '../Data/objects-features-{}/'.format(selectedPredictor)
+    predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
+    predictions, features = predictor.predictionAndFeature(imgPath)
+
+    for i, [x1, y1, x2, y2, label, conf] in enumerate(predictions):
+        imgDict = {'imgPath': imgPath,
+                   'feature': features[i],
+                   'x1': x1,
+                   'y1': y1,
+                   'x2': x2,
+                   'y2': y2,
+                   'conf': conf}
+        featureFile = open(DBdir + label, 'ab+')
+        pickle.dump(imgDict, featureFile)
+        featureFile.close()
+
 def addImageToDB(imgPath, selectedPredictor, predictions = None, features = None):
     predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
 

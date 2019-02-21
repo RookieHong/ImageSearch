@@ -43,5 +43,5 @@ for featureFileName in featureFileNames:
     logFile.write('Class:{:30s}\t\t\t\tCount:{}\t\t\t\tTime:{:5f}\t\t\t\tTime/Count:{}\n'.format(featureFileName, count, searchTime, searchTime/count))
     totalCount = totalCount + count
 
-logFile.write('total images:{}\n'.format(totalCount))
+logFile.write('total images:{}\n\n'.format(totalCount))
 logFile.close()

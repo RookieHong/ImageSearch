@@ -184,8 +184,8 @@ def im_detect(rois, scores, bbox_deltas, im_info,
 
     # convert to per class detection results
     det = []
-    for j in range(1, scores.shape[-1]):    #For every class
-        indexes = np.where(scores[:, j] > conf_thresh)[0]   #Get roi indexes whose class prediction confidence is greater than threshold
+    for j in range(1, scores.shape[-1]):    # For every class
+        indexes = np.where(scores[:, j] > conf_thresh)[0]   # Get roi indexes whose class prediction confidence is greater than threshold
         cls_scores = scores[indexes, j, np.newaxis]
         cls_boxes = pred_boxes[indexes, j * 4:(j + 1) * 4]
         cls_dets = np.hstack((cls_boxes, cls_scores))

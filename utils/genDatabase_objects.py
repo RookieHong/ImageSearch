@@ -16,7 +16,7 @@ for imgsDir in imgsDirs:
     imgNames = os.listdir(imgsDir)
     for imgName in imgNames:
         imgPath = imgsDir + imgName
-        addImageToDB_objects.addImageToDB(imgPath, 'resnet101_fasterRcnn')
+        addImageToDB_objects.addImageToDB_beforeSplit(imgPath, 'resnet101_fasterRcnn')
         count = count + 1
         if count % 1000 == 0:
             print('{} images have been processed.'.format(count))

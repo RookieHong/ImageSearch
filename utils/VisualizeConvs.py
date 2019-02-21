@@ -19,7 +19,7 @@ internals = sym.get_internals()
 
 convs = []  #gather all conv layers in convs
 for key in args:
-    if 'convolution' in key and 'output' in key:    #only visualize convolution output layer
+    if 'convolution' in key and 'output' in key:    # only visualize convolution output layer
         convs.append(internals[key])
 
 if not convs:
@@ -27,7 +27,7 @@ if not convs:
 group = mx.symbol.Group(convs)
 
 mod = mx.mod.Module(symbol=group, context=mx.gpu())
-mod.bind(for_training=False, data_shapes=[('data', (1, 3, 227, 227))])  #shape of Resized objects is (1, 3, 227, 227)
+mod.bind(for_training=False, data_shapes=[('data', (1, 3, 227, 227))])  # shape of Resized objects is (1, 3, 227, 227)
 mod.set_params(arg_params, aux_params)
 
 img = plt.imread('../Data/ResizedObjects/{}'.format(imgName))
@@ -54,13 +54,13 @@ plt.show()
 #this part below simply outputs the prediction of the input img
 output = mx.symbol.Group([internals['softmax_output']])
 mod = mx.mod.Module(symbol=output, context=mx.gpu())
-mod.bind(for_training=False, data_shapes=[('data', (1, 3, 227, 227))])  #shape of Resized objects is (1, 3, 227, 227)
+mod.bind(for_training=False, data_shapes=[('data', (1, 3, 227, 227))])  # shape of Resized objects is (1, 3, 227, 227)
 mod.set_params(arg_params, aux_params)
 mod.forward(Batch([mx.nd.array(img)]))
 prob = mod.get_outputs()[0].asnumpy()
 prob = np.squeeze(prob)
 pred_label = np.argmax(prob)
-with open('../Classes.json', 'r') as json_f:    #open json file that includes classes-label info
+with open('../Classes.json', 'r') as json_f:    # open json file that includes classes-label info
     classes = json.load(json_f)
     classes = dict(zip(classes.values(), classes.keys()))   # reverse json info to label-classes
 print('Predicted class is {}'.format(classes[pred_label]))
