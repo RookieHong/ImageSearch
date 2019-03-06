@@ -13,7 +13,7 @@ for imgsDir in imgsDirs:
     imgNames = os.listdir(imgsDir)
     for imgName in imgNames:
         imgPath = imgsDir + imgName
-        addImageToDB_wholeImage.addImageToDB(imgPath, 'resnet18')
+        addImageToDB_wholeImage.addImageToDB(imgPath, 'custom')
         count = count + 1
         if count % 1000 == 0:
             print('{} images have been processed.'.format(count))

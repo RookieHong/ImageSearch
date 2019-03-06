@@ -7,8 +7,8 @@ from utils import selectors
 param, epoch = selectors.selectParam('../params/')
 
 test_iter = mx.io.ImageRecordIter(
-    path_imgrec = '../Data/RecordIO/test.rec',
-    data_shape = (3, 227, 227),
+    path_imgrec = '../Data/RecordIO/val.rec',
+    data_shape = (3, 224, 224),
 
     batch_size=50,  # batch size=50
 

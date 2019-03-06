@@ -20,7 +20,7 @@ class_names = ['aeroplane', 'bicycle', 'bird', 'boat',
                'motorbike', 'person', 'pottedplant',
                'sheep', 'sofa', 'train', 'tvmonitor']
 
-logFile = open('../log/test_resnet101_fasterRcnn-objects_splitedDB.log', 'a')
+logFile = open('../log/Test/test_resnet101_fasterRcnn-objects_splitedDB.log', 'a')
 
 logFile.write('Assessment {}\n'.format(time.asctime()))
 totalCount = 0

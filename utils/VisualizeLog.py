@@ -17,37 +17,29 @@ def readLogLine(file):  #keep reading till reads something useful
             line = file.readline()
     return line
 
-def showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc, val_crossEntropy, val_mse):
+def showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy):
     x = np.arange(0, epochs)
 
     plt.figure(logFileName + '-' + str(num))
 
-    plt.subplot(311)
-    plt.title('Training accuracy')
+    plt.subplot(211)
+    plt.title('Accuracy')
     plt.plot(x, train_acc, 'r', label='train acc')
     plt.plot(x, val_acc, 'b', label='val acc')
     plt.legend()  # print label
     plt.ylabel('accuracy')
 
-    plt.subplot(312)
-    plt.title('Training cross entropy')
+    plt.subplot(212)
+    plt.title('Cross entropy')
     plt.plot(x, train_crossEntropy, 'r', label='train cross entropy')
     plt.plot(x, val_crossEntropy, 'b', label='val cross entropy')
     plt.legend()  # print label
     plt.ylabel('cross entropy')
 
-    plt.subplot(313)
-    plt.title('Training MSE')
-    plt.plot(x, train_mse, 'r', label='train mse')
-    plt.plot(x, val_mse, 'b', label='val mse')
-    plt.legend()  # print label
-    plt.xlabel('Epoch')
-    plt.ylabel('MSE')
-
-logFileName = selectors.selectLog('../log/')
+logFileName = selectors.selectLog('../log/Training/')
 showAll = True if raw_input('Visualize all training logs?(input y or will visualize only the last training log):') == 'y' else False
 
-f =  open('../log/' + logFileName)
+f =  open('../log/Training/' + logFileName)
 line = readLogLine(f)
 
 num = 0 #records the number of log files
@@ -88,9 +80,9 @@ while line:             #keep reading till log file ends
         line = readLogLine(f)
 
     if showAll:
-        showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc, val_crossEntropy, val_mse)
+        showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy)
 
     if not showAll and not line:
-        showFigure(num, train_acc, train_crossEntropy, train_mse, time_cost, val_acc, val_crossEntropy, val_mse)
+        showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy)
 
 plt.show()

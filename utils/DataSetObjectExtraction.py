@@ -24,7 +24,7 @@ for i, filename in enumerate(filenames):
 
     for object in xmlTree.findall('object'):
         name = object.find('name').text
-        label = classes[name]
+        label = classes[name]   # number of class
 
         bndbox = object.find('bndbox')
         xmin = int(float(bndbox.find('xmin').text))     #reads coordinates
@@ -47,6 +47,9 @@ for i, filename in enumerate(filenames):
         save_path = output_path + name + '-' + str(count[label]) + '_' + str(label) + '.jpg'
         cropped.save(save_path)
         count[label] = count[label] + 1
+
+        if count[label] % 1000 == 0:
+            print('{} has processed {} objects'.format(name, count[label]))
 
 outputCount_f = open('../Data/' + 'objectCount.txt', 'w')
 for i in range(0, 20):

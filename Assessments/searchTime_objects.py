@@ -16,7 +16,7 @@ def pickle_load(f):
 
 predictorName = 'resnet101_fasterRcnn'
 featuresDir = '../Data/objects-features-{}/'.format(predictorName)
-logFile = open('../log/test_{}-objects.log'.format(predictorName), 'a')
+logFile = open('../log/Test/test_{}-objects.log'.format(predictorName), 'a')
 featureFileNames = os.listdir(featuresDir)
 
 logFile.write('Assessment {}\n'.format(time.asctime()))

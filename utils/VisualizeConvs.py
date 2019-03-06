@@ -27,7 +27,7 @@ if not convs:
 group = mx.symbol.Group(convs)
 
 mod = mx.mod.Module(symbol=group, context=mx.gpu())
-mod.bind(for_training=False, data_shapes=[('data', (1, 3, 227, 227))])  # shape of Resized objects is (1, 3, 227, 227)
+mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))])  # shape of Resized objects is (1, 3, 224, 224)
 mod.set_params(arg_params, aux_params)
 
 img = plt.imread('../Data/ResizedObjects/{}'.format(imgName))

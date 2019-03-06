@@ -16,7 +16,7 @@ def pickle_load(f):
 
 predictorName = 'resnet152'
 featuresDir = '../Data/wholeImage-features-{}/'.format(predictorName)
-logFile = open('../log/test_{}-wholeImage.log'.format(predictorName), 'a')
+logFile = open('../log/Test/test_{}-wholeImage.log'.format(predictorName), 'a')
 featureFileNames = os.listdir(featuresDir)
 
 logFile.write('Assessment {}\n'.format(time.asctime()))

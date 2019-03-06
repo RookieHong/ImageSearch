@@ -6,7 +6,7 @@ def addImageToDB(imgPath, selectedPredictor):
     DBdir = '../Data/wholeImage-features-{}/'.format(selectedPredictor)
     predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
 
-    feature, label = predictor.predictionAndFeature(imgPath)
+    prob, label, feature = predictor.predictionAndFeature(imgPath)
     imgDict = {'imgPath': imgPath, 'feature': feature}
 
     featureFile = open(DBdir + label, 'ab+')

@@ -3,7 +3,6 @@ import numpy as np
 from collections import namedtuple
 import cv2
 
-
 def getImgReady(img):
     if img is None:
         return None
@@ -13,7 +12,6 @@ def getImgReady(img):
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]
     return img
-
 
 # define a simple data batch
 Batch = namedtuple('Batch', ['data'])
@@ -54,7 +52,7 @@ def predictionAndFeature(imgPath):
     # list the last 10 layers
     all_layers = sym.get_internals()
     symbols = []
-    symbols.append(all_layers['flatten0_output']) #An often used layer for feature extraction is the one before the last fully connected layer.
+    symbols.append(all_layers['flatten0_output']) # An often used layer for feature extraction is the one before the last fully connected layer.
                                 # For ResNet, and also Inception, it is the flattened layer with name flatten0 which reshapes the 4-D convolutional layer output into 2-D for the fully connected layer.
     symbols.append(all_layers['fc1_output'])
     symbols = mx.symbol.Group(symbols)
