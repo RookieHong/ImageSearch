@@ -11,14 +11,12 @@ def readLogLine(file):  #keep reading till reads something useful
     while line \
         and not re.search('num_epoch=(.*)', line) \
         and not re.search('accuracy=(.*)', line) \
-        and not re.search('entropy=(.*)', line) \
-        and not re.search('mse=(.*)', line) \
-        and not re.search('cost=(.*)', line):
+        and not re.search('entropy=(.*)', line):
             line = file.readline()
     return line
 
-def showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy):
-    x = np.arange(0, epochs)
+def showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy, epoch):
+    x = np.arange(0, epoch)
 
     plt.figure(logFileName + '-' + str(num))
 
@@ -37,7 +35,7 @@ def showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy):
     plt.ylabel('cross entropy')
 
 logFileName = selectors.selectLog('../log/Training/')
-showAll = True if raw_input('Visualize all training logs?(input y or will visualize only the last training log):') == 'y' else False
+showLogs = input('Input n to show last n training logs:')
 
 f =  open('../log/Training/' + logFileName)
 line = readLogLine(f)
@@ -47,26 +45,27 @@ num = 0 #records the number of log files
 logDict = {
     'Train-accuracy=(.*)': 'train_acc[i]',
     'Train-cross-entropy=(.*)': 'train_crossEntropy[i]',
-    'Train-mse=(.*)': 'train_mse[i]',
-    'cost=(.*)': 'time_cost[i]',
     'Validation-accuracy=(.*)': 'val_acc[i]',
-    'Validation-cross-entropy=(.*)': 'val_crossEntropy[i]',
-    'Validation-mse=(.*)': 'val_mse[i]'
+    'Validation-cross-entropy=(.*)': 'val_crossEntropy[i]'
 }
 
+epochs = []
+
+train_accs = []
+train_crossEntropys = []
+
+val_accs = []
+val_crossEntropys = []
+
 while line:             #keep reading till log file ends
-    epochs = int(re.search('num_epoch=(.*)', line).group(1))
+    epoch = int(re.search('num_epoch=(.*)', line).group(1))
     line = readLogLine(f)
 
-    train_acc = np.zeros(epochs)
-    train_crossEntropy = np.zeros(epochs)
-    train_mse = np.zeros(epochs)
+    train_acc = np.zeros(epoch)
+    train_crossEntropy = np.zeros(epoch)
 
-    time_cost = np.zeros(epochs)
-
-    val_acc = np.zeros(epochs)
-    val_crossEntropy = np.zeros(epochs)
-    val_mse = np.zeros(epochs)
+    val_acc = np.zeros(epoch)
+    val_crossEntropy = np.zeros(epoch)
 
     num = num + 1
 
@@ -79,10 +78,19 @@ while line:             #keep reading till log file ends
                 break
         line = readLogLine(f)
 
-    if showAll:
-        showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy)
+    train_accs.append(train_acc)
+    train_crossEntropys.append(train_crossEntropy)
 
-    if not showAll and not line:
-        showFigure(num, train_acc, train_crossEntropy, val_acc, val_crossEntropy)
+    val_accs.append(val_acc)
+    val_crossEntropys.append(val_crossEntropy)
+
+    epochs.append(epoch)
+
+if showLogs > num:
+    showLogs = num
+
+for i in range(showLogs):
+    toBeShownNo = num - 1 - i
+    showFigure(toBeShownNo, train_accs[toBeShownNo], train_crossEntropys[toBeShownNo], val_accs[toBeShownNo], val_crossEntropys[toBeShownNo], epochs[toBeShownNo])
 
 plt.show()

@@ -13,7 +13,7 @@ with open('../Classes.json', 'r') as json_f:    ##open json file that includes c
 
 Batch = namedtuple('Batch', ['data'])
 input_path = '../Data/ResizedObjects'
-mod = mx.mod.Module.load('../params/PascalVOC_custom', 40, context=mx.gpu(0))
+mod = mx.mod.Module.load('../params/PascalVOC_custom', 100, context=mx.gpu(0))
 mod.bind(
     data_shapes=[('data', (1, 3, 224, 224))],
     for_training=False
