@@ -58,7 +58,7 @@ function showSearchResult(tabPage, empty) {
         $img.attr('src', matchList[showCount][0])
 
         $label = $('<h5 class="text-center"></h5>')
-        $label.text('Cosine distance: ' + Math.round(matchList[showCount][1] * 1000) / 1000)    //save 3 bits after dot
+        $label.text('No.' + showCount + ' Cosine distance: ' + Math.round(matchList[showCount][1] * 1000) / 1000)    //save 3 bits after dot
 
         $a.append($img)
         $div.append($a)
@@ -153,7 +153,7 @@ function uploadImage_wholeImage(ifAddImage) {
         }
 
         if(ifAddImage == 'false') {
-            $('#inputImg_wholeImage').attr('src', '../cgi/input.' + ext + '?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload more than once
+            $('#inputImg_wholeImage').attr('src', '../cgi/input.' + ext + '?' + Math.random()) //makes src different every time, so the image shown will be changed when you upload for a second time
             $('#classification_wholeImage').text(res.classification)
         }
 

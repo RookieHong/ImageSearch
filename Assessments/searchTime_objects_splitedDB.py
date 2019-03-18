@@ -5,6 +5,7 @@ from scipy.spatial.distance import pdist
 import random
 import os
 import operator
+import matplotlib.pyplot as plt
 
 def pickle_load(f):
     try:
@@ -53,27 +54,52 @@ allocatedTo = min(centroids_distances, key=centroids_distances.get)
 
 findCentroidTime = time.time() - findCentroidTime
 
-logFile.write('Random class: {}\t\tAllocated to: {}\t\tFinding centroid cost time: {}s\n'.format(label, allocatedTo, findCentroidTime))
+logFile.write('Random class: {}\t\tAllocated to: {}\t\tFinding centroid costs time: {}s\n'.format(label, allocatedTo, findCentroidTime))
 
-searchTime = time.time()
-objectsCount = 0
+featureFileNames = os.listdir('../Data/splited-objects-features-resnet101_fasterRcnn/')
+searchTimes = []
+counts = []
+totalCount = 0
 
-featureFile = open('../Data/splited-objects-features-resnet101_fasterRcnn/' + allocatedTo)
+for featureFileName in featureFileNames:
+    if os.path.getsize('../Data/splited-objects-features-resnet101_fasterRcnn/' + featureFileName) == 0 or featureFileName == 'centroids':    # No object allocated into this file or this is centroids file
+        continue
+    searchTime = time.time()
+    featureFile = open('../Data/splited-objects-features-resnet101_fasterRcnn/' + featureFileName)
 
-distances = {}
-data = pickle_load(featureFile)
-while data:
-    objectsCount = objectsCount + 1
-    dataFeature = np.array(data['feature'])
-    distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
-    distances[data['imgPath']] = float(distance)
+    distances = {}
     data = pickle_load(featureFile)
-featureFile.close()
+    inputFeature = np.array(data['feature'])
+    objectsCount = 0
+    while data:
+        objectsCount = objectsCount + 1
+        dataFeature = np.array(data['feature'])
+        distance = pdist(np.vstack([inputFeature, dataFeature]), 'cosine')
+        distances[data['imgPath']] = float(distance)
+        data = pickle_load(featureFile)
+    featureFile.close()
 
-matchList = sorted(distances.items(), key=operator.itemgetter(1))
+    matchList = sorted(distances.items(), key=operator.itemgetter(1))
+    searchTime = time.time() - searchTime + findCentroidTime    # add findCentroidTime to each search time
+    searchTimes.append(searchTime)
 
-searchTime = time.time() - searchTime
+    logFile.write('Class:{:30s}\t\t\t\tCount:{}\t\t\t\tTime:{:5f}\t\t\t\tTime/Count:{}\n'.format(featureFileName, objectsCount,searchTime,searchTime / objectsCount))
+    totalCount = totalCount + objectsCount
+    counts.append(objectsCount)
 
-logFile.write('{} has {} objects\t\tSearch cost time: {}s\t\tTime/Count: {}\n'.format(allocatedTo, objectsCount, searchTime, searchTime / objectsCount))
-logFile.write('Totally cost time: {}s\n\n'.format(findCentroidTime + searchTime))
+logFile.write('total objects:{}\n\n'.format(totalCount))
 logFile.close()
+
+plt.figure("splitted-objects-features-resnet101_fasterRcnn search time statistics")
+plt.bar(range(len(searchTimes)), searchTimes)
+plt.xlabel("Categories")
+plt.ylabel("Search time(s)")
+plt.title("splitted-objects-features-resnet101_fasterRcnn search time statistics")
+
+plt.figure("splitted-objects-features-resnet101_fasterRcnn quantity statistics")
+plt.bar(range(len(counts)), counts)
+plt.xlabel("Categories")
+plt.ylabel("Quantity")
+plt.title("splitted-objects-features-resnet101_fasterRcnn quantity statistics")
+
+plt.show()

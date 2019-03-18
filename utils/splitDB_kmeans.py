@@ -84,16 +84,16 @@ for featureFileName in featureFileNames:
     featureFile.close()
     features = np.array(features)
 
-    centroidAmount = count / 500    #Expect about 300 images allocated to a centroid
+    centroidAmount = count / 500    # Expect about 500 images allocated to a centroid
     print('Count: {} Centroids: {}'.format(count, centroidAmount))
     dataAllocation, centroids = kmeans(features, centroidAmount)
 
-    centroidFile = open(newDBDir + 'centroids', 'ab')   #centroidFile records every centroid feature in it
+    centroidFile = open(newDBDir + 'centroids', 'ab')   # centroidFile records every centroid feature in it
     for i in range(centroidAmount):
         pickle.dump({'{}_{}'.format(featureFileName, i): centroids[i]}, centroidFile)
     centroidFile.close()
 
-    files = [(open('{}_{}'.format(newDBDir + featureFileName, i), 'wb')) for i in range(centroidAmount)]    #Save image dicts into every file
+    files = [(open('{}_{}'.format(newDBDir + featureFileName, i), 'wb')) for i in range(centroidAmount)]    # Save image dicts into every file
     for i in range(count):
         allocatedTo = int(dataAllocation[i][1])
         pickle.dump(allData[i], files[allocatedTo])
