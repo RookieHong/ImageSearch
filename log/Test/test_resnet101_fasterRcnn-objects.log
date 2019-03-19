@@ -1,0 +1,46 @@
+Assessment Thu Mar 14 14:35:09 2019
+Class:bottle                        				Count:5405				Time:1.817543				Time/Count:0.000336270680811
+Class:train                         				Count:1671				Time:0.564040				Time/Count:0.00033754634686
+Class:aeroplane                     				Count:1789				Time:1.041213				Time/Count:0.000582008271193
+Class:bus                           				Count:1603				Time:6.396330				Time/Count:0.00399022465264
+Class:sofa                          				Count:1969				Time:7.817041				Time/Count:0.00397005633329
+Class:chair                         				Count:7786				Time:16.389110				Time/Count:0.00210494603775
+Class:person                        				Count:45368				Time:23.181304				Time/Count:0.000510961558322
+Class:diningtable                   				Count:3993				Time:12.137767				Time/Count:0.00303976135149
+Class:tvmonitor                     				Count:3347				Time:6.885528				Time/Count:0.00205722380867
+Class:motorbike                     				Count:1948				Time:6.569094				Time/Count:0.00337222481655
+Class:car                           				Count:7561				Time:15.662194				Time/Count:0.00207144478423
+Class:bird                          				Count:9452				Time:14.170257				Time/Count:0.00149918081798
+Class:dog                           				Count:11366				Time:18.047955				Time/Count:0.00158788976211
+Class:pottedplant                   				Count:5054				Time:13.469808				Time/Count:0.00266517770116
+Class:horse                         				Count:2307				Time:6.855564				Time/Count:0.00297163594167
+Class:cow                           				Count:1299				Time:4.843058				Time/Count:0.00372829723578
+Class:cat                           				Count:4099				Time:6.739274				Time/Count:0.00164412637838
+Class:bicycle                       				Count:2160				Time:6.899058				Time/Count:0.00319400838128
+Class:sheep                         				Count:1740				Time:5.520204				Time/Count:0.00317253107312
+Class:boat                          				Count:4186				Time:11.770908				Time/Count:0.00281197034851
+total objects:124103
+
+Assessment Fri Mar 15 13:39:05 2019
+Class:bottle                        				Count:5405				Time:13.713794				Time/Count:0.00253724218187
+Class:train                         				Count:1671				Time:6.119315				Time/Count:0.00366206756971
+Class:aeroplane                     				Count:1789				Time:6.495674				Time/Count:0.00363089653152
+Class:bus                           				Count:1603				Time:6.447257				Time/Count:0.00402199441169
+Class:sofa                          				Count:1969				Time:7.272314				Time/Count:0.00369340481039
+Class:chair                         				Count:7786				Time:15.745575				Time/Count:0.00202229321233
+Class:person                        				Count:45368				Time:22.926464				Time/Count:0.000505344385488
+Class:diningtable                   				Count:3993				Time:12.283962				Time/Count:0.00307637415761
+Class:tvmonitor                     				Count:3347				Time:6.808659				Time/Count:0.00203425726821
+Class:motorbike                     				Count:1948				Time:6.733733				Time/Count:0.00345674175501
+Class:car                           				Count:7561				Time:15.650355				Time/Count:0.00206987896604
+Class:bird                          				Count:9452				Time:14.105063				Time/Count:0.00149228345324
+Class:dog                           				Count:11366				Time:18.290370				Time/Count:0.00160921786256
+Class:pottedplant                   				Count:5054				Time:13.680653				Time/Count:0.00270689614073
+Class:horse                         				Count:2307				Time:6.942602				Time/Count:0.00300936374408
+Class:cow                           				Count:1299				Time:4.933939				Time/Count:0.00379825941501
+Class:cat                           				Count:4099				Time:7.027720				Time/Count:0.00171449621237
+Class:bicycle                       				Count:2160				Time:6.889160				Time/Count:0.00318942588788
+Class:sheep                         				Count:1740				Time:5.629457				Time/Count:0.00323532011317
+Class:boat                          				Count:4186				Time:11.571510				Time/Count:0.00276433589979
+total objects:124103
+

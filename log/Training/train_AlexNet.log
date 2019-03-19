@@ -1,0 +1,43 @@
+2019-03-02 00:10:30,074 - root - DEBUG - num_epoch=40
+2019-03-02 00:17:20,777 - root - INFO - Update[1501]: Change learning rate to 9.00000e-03
+2019-03-02 00:17:43,618 - root - INFO - Epoch[0] Train-accuracy=0.342339
+2019-03-02 00:17:43,618 - root - INFO - Epoch[0] Train-cross-entropy=2.454709
+2019-03-02 00:17:43,619 - root - INFO - Epoch[0] Time cost=432.633
+2019-03-02 00:18:01,248 - root - INFO - Epoch[0] Validation-accuracy=0.338601
+2019-03-02 00:18:01,248 - root - INFO - Epoch[0] Validation-cross-entropy=2.440488
+2019-03-02 00:24:27,537 - root - INFO - Update[3001]: Change learning rate to 8.10000e-03
+2019-03-02 00:25:13,314 - root - INFO - Epoch[1] Train-accuracy=0.342438
+2019-03-02 00:25:13,314 - root - INFO - Epoch[1] Train-cross-entropy=2.436365
+2019-03-02 00:25:13,314 - root - INFO - Epoch[1] Time cost=432.065
+2019-03-02 00:25:30,814 - root - INFO - Epoch[1] Validation-accuracy=0.339107
+2019-03-02 00:25:30,814 - root - INFO - Epoch[1] Validation-cross-entropy=2.439183
+2019-03-02 00:31:33,778 - root - INFO - Update[4501]: Change learning rate to 7.29000e-03
+2019-03-02 00:32:42,264 - root - INFO - Epoch[2] Train-accuracy=0.342556
+2019-03-02 00:32:42,264 - root - INFO - Epoch[2] Train-cross-entropy=2.436021
+2019-03-02 00:32:42,265 - root - INFO - Epoch[2] Time cost=431.450
+2019-03-02 00:32:59,936 - root - INFO - Epoch[2] Validation-accuracy=0.339107
+2019-03-02 00:32:59,936 - root - INFO - Epoch[2] Validation-cross-entropy=2.438855
+2019-03-02 00:38:39,829 - root - INFO - Update[6001]: Change learning rate to 6.56100e-03
+2019-03-02 00:40:11,043 - root - INFO - Epoch[3] Train-accuracy=0.342408
+2019-03-02 00:40:11,043 - root - INFO - Epoch[3] Train-cross-entropy=2.436220
+2019-03-02 00:40:11,043 - root - INFO - Epoch[3] Time cost=431.107
+2019-03-02 00:40:28,477 - root - INFO - Epoch[3] Validation-accuracy=0.338839
+2019-03-02 00:40:28,477 - root - INFO - Epoch[3] Validation-cross-entropy=2.439570
+2019-03-02 00:45:45,382 - root - INFO - Update[7501]: Change learning rate to 5.90490e-03
+2019-03-02 00:47:39,180 - root - INFO - Epoch[4] Train-accuracy=0.342487
+2019-03-02 00:47:39,180 - root - INFO - Epoch[4] Train-cross-entropy=2.435934
+2019-03-02 00:47:39,180 - root - INFO - Epoch[4] Time cost=430.703
+2019-03-02 00:47:56,683 - root - INFO - Epoch[4] Validation-accuracy=0.338512
+2019-03-02 00:47:56,684 - root - INFO - Epoch[4] Validation-cross-entropy=2.440015
+2019-03-02 00:52:50,852 - root - INFO - Update[9001]: Change learning rate to 5.31441e-03
+2019-03-02 00:55:07,427 - root - INFO - Epoch[5] Train-accuracy=0.342478
+2019-03-02 00:55:07,427 - root - INFO - Epoch[5] Train-cross-entropy=2.435933
+2019-03-02 00:55:07,427 - root - INFO - Epoch[5] Time cost=430.743
+2019-03-02 00:55:24,823 - root - INFO - Epoch[5] Validation-accuracy=0.338929
+2019-03-02 00:55:24,823 - root - INFO - Epoch[5] Validation-cross-entropy=2.439259
+2019-03-02 00:59:56,060 - root - INFO - Update[10501]: Change learning rate to 4.78297e-03
+2019-03-02 01:02:35,390 - root - INFO - Epoch[6] Train-accuracy=0.342428
+2019-03-02 01:02:35,391 - root - INFO - Epoch[6] Train-cross-entropy=2.435938
+2019-03-02 01:02:35,391 - root - INFO - Epoch[6] Time cost=430.568
+2019-03-02 01:02:52,801 - root - INFO - Epoch[6] Validation-accuracy=0.339018
+2019-03-02 01:02:52,801 - root - INFO - Epoch[6] Validation-cross-entropy=2.438985
