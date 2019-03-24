@@ -22,7 +22,7 @@ def get_classifier(input_data, num_classes, **kwargs):
     fc8 = mx.sym.FullyConnected(data=drop7, num_hidden=num_classes, name="fc8")
     return fc8
 
-def get_symbol(num_classes, num_layers=11, batch_norm=False, dtype='float32', **kwargs):
+def get_symbol(num_classes=10, num_layers=11, batch_norm=False, dtype='float32', **kwargs):
     """
     Parameters
     ----------

@@ -65,10 +65,10 @@ lr_scheduler = mx.lr_scheduler.FactorScheduler(1500, factor = 0.90)
 optimizer_params = {
     'learning_rate': 0.01,
     'momentum': 0.9,
-    'wd': 0.0005,   # weight decay
+    'wd': 0.04,   # weight decay
     'lr_scheduler': lr_scheduler
 }
-num_epoch = 100  # train epochs
+num_epoch = 200  # train epochs
 checkpoint = mx.callback.do_checkpoint(checkpointName, period = num_epoch)
 
 # set eval_metrics

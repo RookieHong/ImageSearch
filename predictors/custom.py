@@ -21,7 +21,7 @@ with open(projectPath + 'Classes.json', 'r') as json_f:    # open json file that
     classes = dict(zip(classes.values(), classes.keys()))   # reverse json info to label-classes
 
 Batch = namedtuple('Batch', ['data'])
-sym, arg_params, aux_params = mx.model.load_checkpoint(projectPath + 'params/PascalVOC_custom', 100)
+sym, arg_params, aux_params = mx.model.load_checkpoint(projectPath + 'params/PascalVOC_custom', 200)
 mod = mx.mod.Module(symbol=sym, context=mx.gpu(), label_names=None)
 #input data size must be 224x224
 mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))],

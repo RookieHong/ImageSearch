@@ -13,7 +13,7 @@ for imgsDir in imgsDirs:
     imgNames = os.listdir(imgsDir)
     for imgName in imgNames:
         imgPath = imgsDir + imgName
-        addImageToDB_wholeImage.addImageToDB(imgPath, 'custom')
+        addImageToDB_wholeImage.addImageToDB(imgPath, 'custom') # select a predictor here
         count = count + 1
         if count % 1000 == 0:
             print('{} images have been processed.'.format(count))
