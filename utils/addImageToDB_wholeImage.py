@@ -2,8 +2,7 @@
 import pickle
 import importlib
 
-def addImageToDB(imgPath, selectedPredictor):
-    DBdir = '../Data/wholeImage-features-{}/'.format(selectedPredictor)
+def addImageToDB(imgPath, selectedPredictor, DBdir):
     predictor = importlib.import_module('predictors.{}'.format(selectedPredictor))
 
     prob, label, feature = predictor.predictionAndFeature(imgPath)

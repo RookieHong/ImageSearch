@@ -58,7 +58,7 @@ function showSearchResult(tabPage, empty) {
         $img.attr('src', matchList[showCount][0])
 
         $label = $('<h5 class="text-center"></h5>')
-        $label.text('No.' + showCount + ' Cosine distance: ' + Math.round(matchList[showCount][1] * 1000) / 1000)    //save 3 bits after dot
+        $label.text('No.' + showCount + ' Cosine similarity: ' + Math.round(matchList[showCount][1] * 1000) / 1000)    //save 3 bits after dot
 
         $a.append($img)
         $div.append($a)
