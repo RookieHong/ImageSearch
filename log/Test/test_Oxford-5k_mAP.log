@@ -1,0 +1,24 @@
+Wed Mar 27 12:07:05 2019:
+Using cropped query images: True
+resnet18 mAP: 0.381662025455
+resnet101 mAP: 0.387959227273
+resnet152 mAP: 0.37792788
+
+
+Wed Mar 27 15:39:05 2019:
+Using cropped query images: False
+resnet18 mAP: 0.424213083636
+resnet101 mAP: 0.438505372727
+resnet152 mAP: 0.425176381818
+
+Thu Mar 28 23:26:17 2019:
+Using cropped query images: False
+BOF_64features mAP: 0.0237875608182
+
+Fri Mar 29 20:17:25 2019:
+Using cropped query images: False
+BOF_128features mAP: 0.0198074298909
+
+Fri Mar 29 21:29:54 2019:
+Using cropped query images: False
+BOF_256features mAP: 0.0189458643636

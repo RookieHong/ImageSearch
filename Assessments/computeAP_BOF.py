@@ -12,7 +12,7 @@ ifcropped = False    # Use cropped query images or not
 logFile.write('Using cropped query images: {}\n'.format(ifcropped))
 
 query_images = os.listdir('../Data/Oxford-5k/cropped_query_images/') if ifcropped else os.listdir('../Data/Oxford-5k/query_images/')
-im_features, image_paths, idf, numWords, voc, nfeatures = joblib.load('../Data/Oxford-5k/BOF/BOF_64features.pkl')
+im_features, image_paths, idf, numWords, voc, nfeatures = joblib.load('../Data/Oxford-5k/BOF/BOF_256features.pkl')
 sift = cv2.xfeatures2d.SIFT_create(nfeatures=nfeatures)
 aps = []
 for query_image in query_images:

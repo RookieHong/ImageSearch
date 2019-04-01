@@ -3,6 +3,7 @@ import numpy as np
 import os
 from sklearn.externals import joblib
 from scipy.cluster.vq import *
+import gc
 
 from sklearn import preprocessing
 
@@ -21,7 +22,7 @@ for training_name in training_names:
     image_paths += [image_path]
 
 # Create feature extraction and keypoint detector objects
-nfeatures = 64
+nfeatures = 512
 sift = cv2.xfeatures2d.SIFT_create(nfeatures=nfeatures)
 
 # List where all the descriptors are stored
@@ -37,11 +38,22 @@ for i, image_path in enumerate(image_paths):
 
 # Stack all the descriptors vertically in a numpy array
 descriptors = des_list[0][1]
-for image_path, descriptor in des_list[1:]:
+del des_list[0]
+gc.collect()
+
+while len(des_list) > 0:
+    image_path = des_list[0][0]
+    descriptor = des_list[0][1]
+
+    del des_list[0]
+    gc.collect()
+
     if descriptor is None:
         print('{} has none descriptor'.format(image_path))
         continue
     descriptors = np.vstack((descriptors, descriptor))
+
+print('descriptors shape: {}'.format(descriptors.shape))
 
 # Perform k-means clustering
 print("Start k-means: %d words, %d key points" %(numWords, descriptors.shape[0]))
