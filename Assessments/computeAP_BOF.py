@@ -6,10 +6,31 @@ import time
 from scipy.cluster.vq import *
 from sklearn import preprocessing
 
+def matchImages(inputFeature, QESize=0):
+    score = np.dot(inputFeature, im_features.T)
+    rank_ID = np.argsort(-score)
+    matchList = []
+    for i in range(len(rank_ID[0])):
+        imgName = os.path.splitext(os.path.basename(image_paths[rank_ID[0][i]]))[0]
+        matchList.append(imgName)
+
+    if QESize > 0:
+        for i in range(0, QESize):
+            inputFeature = inputFeature + im_features[rank_ID[i]]
+        inputFeature = inputFeature / QESize
+
+        matchList = matchImages(inputFeature)
+
+    return matchList
+
 logFile = open('../log/Test/test_Oxford-5k_mAP.log', 'a')
 logFile.write('\n{}:\n'.format(time.asctime()))
+
 ifcropped = False    # Use cropped query images or not
 logFile.write('Using cropped query images: {}\n'.format(ifcropped))
+
+QESize = 0  # Use top k retrieved image features' mean to re-retrieve
+logFile.write('QE size = {}\n'.format(QESize))
 
 query_images = os.listdir('../Data/Oxford-5k/cropped_query_images/') if ifcropped else os.listdir('../Data/Oxford-5k/query_images/')
 im_features, image_paths, idf, numWords, voc, nfeatures = joblib.load('../Data/Oxford-5k/BOF/BOF_256features.pkl')
@@ -28,12 +49,7 @@ for query_image in query_images:
     inputFeature = inputFeature * idf
     inputFeature = preprocessing.normalize(inputFeature, norm='l2')
 
-    score = np.dot(inputFeature, im_features.T)
-    rank_ID = np.argsort(-score)
-    matchList = []
-    for i in range(len(rank_ID[0])):
-        imgName = os.path.splitext(os.path.basename(image_paths[rank_ID[0][i]]))[0]
-        matchList.append(imgName)
+    matchList = matchImages(inputFeature, QESize=QESize)
 
     rankFilePath = '../Data/Oxford-5k/temp.txt'
     rankFile = open(rankFilePath, 'w')

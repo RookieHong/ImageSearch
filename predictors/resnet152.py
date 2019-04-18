@@ -3,17 +3,17 @@ import numpy as np
 from collections import namedtuple
 import cv2
 
-
 def getImgReady(img):
     if img is None:
         return None
     # convert into format (batch, RGB, width, height)
     img = cv2.resize(img, (224, 224))
+    img = np.int64(img)
+    img -= np.array((123, 117, 104))  # For Oxford dataset
     img = np.swapaxes(img, 0, 2)
     img = np.swapaxes(img, 1, 2)
     img = img[np.newaxis, :]
     return img
-
 
 # define a simple data batch
 Batch = namedtuple('Batch', ['data'])

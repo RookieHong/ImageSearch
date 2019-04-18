@@ -4,7 +4,7 @@ from utils import addImageToDB_wholeImage
 
 count = 0
 
-predictor = 'resnet101'
+predictor = 'custom'
 #DBdir = '../Data/wholeImage-features-{}/'.format(predictor)
 DBdir = '../Data/Oxford-5k/{}/'.format(predictor)
 imgsDirs = [
