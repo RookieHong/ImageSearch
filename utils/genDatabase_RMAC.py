@@ -11,10 +11,12 @@ if __name__ == '__main__':
     featureDim = {
         'vgg16': 512,
         'resnet18': 512,
-        'resnet101': 2048
+        'resnet101': 512,
+        'resnet152': 512,
+        'custom': 512
     }
 
-    predictorName = 'resnet101'
+    predictorName = 'resnet18'
     predictor = importlib.import_module('predictors.{}'.format(predictorName))
     featuresFile = open('../Data/Oxford-5k/R-MAC/{}_{}_RMAC'.format(predictorName, featureDim[predictorName]), 'wb')
 

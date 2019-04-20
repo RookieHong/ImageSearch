@@ -9,14 +9,14 @@ from rmacRegions import rmac_regions
 
 if __name__ == '__main__':
 
-    predictorName = 'resnet101'
+    predictorName = 'resnet18'
     predictor = importlib.import_module('predictors.{}'.format(predictorName))
-    dimension = 2048
+    dimension = 512
     PCAfile = open('../Data/PCA/{}_{}_PCA'.format(predictorName, dimension), 'wb')
 
     imgsDirs = [
         '../Data/Paris-6k/all_images/',
-        '../Data/Oxford-5k/oxbuild_images/'
+        #'../Data/Oxford-5k/oxbuild_images/'
     ]
     imgNames  = []
     for imgsDir in imgsDirs:

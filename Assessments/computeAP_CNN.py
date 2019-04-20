@@ -44,7 +44,7 @@ def matchImages(inputFeature, featuresDir, QEsize=0):
 
     return matchList
 
-predictorNames = ['custom']
+predictorNames = ['vgg16']
 logFile = open('../log/Test/test_Oxford-5k_mAP.log', 'a')
 logFile.write('\n{}:\n'.format(time.asctime()))
 

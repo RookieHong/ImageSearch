@@ -40,14 +40,14 @@ if __name__ == '__main__':
     QEsize = 0  # Use top k retrieved image features' mean to re-retrieve
     logFile.write('QE size = {}\n'.format(QEsize))
 
-    predictorName = 'resnet101'
-    dimension = 2048
+    predictorName = 'resnet18'
+    dimension = 512
     print('{}: \n'.format(predictorName))
     predictor = importlib.import_module('predictors.{}'.format(predictorName))
     featuresFile = open('../Data/Oxford-5k/R-MAC/{}_{}_RMAC'.format(predictorName, dimension), 'rb')
     features = pickle.load(featuresFile)
 
-    logFile.write('R-MAC, {}d, resized\n'.format(dimension))
+    logFile.write('R-MAC, {}d, no resized\n'.format(dimension))
 
     PCAfile = open('../Data/PCA/{}_{}_PCA'.format(predictorName, dimension))
     pca = pickle.load(PCAfile)

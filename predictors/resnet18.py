@@ -74,7 +74,7 @@ def predictionAndFeature(imgPath):
 
     return prob, label, feature
 
-def getFeatureMap(imgPath):
+def getFeatureMap_resized(imgPath):
     img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
     img = getImgReady(img)
 
@@ -85,6 +85,29 @@ def getFeatureMap(imgPath):
 
     fe_mod = mx.mod.Module(symbol=symbols, context=mx.gpu(), label_names=None)
     fe_mod.bind(for_training=False, data_shapes=[('data', (1, 3, 224, 224))])
+    fe_mod.set_params(arg_params, aux_params)
+
+    fe_mod.forward(Batch([mx.nd.array(img)]))
+
+    featureMap = fe_mod.get_outputs()[0].asnumpy()
+
+    return featureMap
+
+def getFeatureMap(imgPath):
+    img = cv2.cvtColor(cv2.imread(imgPath), cv2.COLOR_BGR2RGB)
+    imgWidth, imgHeight = img.shape[0], img.shape[1]
+    # convert into format (batch, RGB, width, height)
+    img = np.int64(img)
+    img -= np.array((123, 117, 104))  # For Oxford dataset
+    img = np.swapaxes(img, 0, 2)
+    img = np.swapaxes(img, 1, 2)
+    img = img[np.newaxis, :]
+
+    all_layers = sym.get_internals()
+    net = all_layers['relu1_output']
+
+    fe_mod = mx.mod.Module(symbol=net, context=mx.gpu(), label_names=None)
+    fe_mod.bind(for_training=False, data_shapes=[('data', (1, 3, imgWidth, imgHeight))])
     fe_mod.set_params(arg_params, aux_params)
 
     fe_mod.forward(Batch([mx.nd.array(img)]))

@@ -4,7 +4,7 @@ from utils import addImageToDB_wholeImage
 
 count = 0
 
-predictor = 'custom'
+predictor = 'vgg16'
 #DBdir = '../Data/wholeImage-features-{}/'.format(predictor)
 DBdir = '../Data/Oxford-5k/{}/'.format(predictor)
 imgsDirs = [
