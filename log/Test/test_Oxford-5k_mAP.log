@@ -868,3 +868,332 @@ R-MAC, 512d, no resized
 	balliol:0.687583
 	christ_church:0.6630072
 vgg16 mAP: 0.704657454545
+
+Sat Apr 20 16:00:32 2019:
+Using cropped query images: False
+QE size = 0
+R-MAC, 512d, no resized
+	ashmolean:0.07685222
+	pitt_rivers:0.2049364
+	bodleian:0.12507362
+	hertford:0.10405254
+	cornmarket:0.1272866
+	radcliffe_camera:0.18394
+	all_souls:0.0988132
+	keble:0.3207416
+	magdalen:0.04067804
+	balliol:0.1332196
+	christ_church:0.12831332
+custom mAP: 0.140355194545
+
+Sat Apr 20 17:24:17 2019:
+Using cropped query images: False
+QE size = 0
+R-MAC, 512d, no resized
+	ashmolean:0.08881268
+	pitt_rivers:0.1930502
+	bodleian:0.12363384
+	hertford:0.0939146
+	cornmarket:0.1216016
+	radcliffe_camera:0.17192014
+	all_souls:0.09824638
+	keble:0.340154
+	magdalen:0.04081258
+	balliol:0.1254656
+	christ_church:0.12456068
+custom mAP: 0.1383793
+
+Sat Apr 20 20:17:14 2019:
+Using cropped query images: False
+QE size = 0
+R-MAC, 512d, no resized
+	ashmolean:0.5079368
+	pitt_rivers:0.788476
+	bodleian:0.505024
+	hertford:0.7022228
+	cornmarket:0.2222966
+	radcliffe_camera:0.9119662
+	all_souls:0.5812856
+	keble:0.859694
+	magdalen:0.19360144
+	balliol:0.5183994
+	christ_church:0.5245094
+resnet18 mAP: 0.574128385455
+
+Sun Apr 21 12:54:29 2019:
+Using cropped query images: False
+QE size = 0
+R-MAC, 512d, no resized
+	ashmolean:0.08162418
+	pitt_rivers:0.1949896
+	bodleian:0.12569978
+	hertford:0.09935982
+	cornmarket:0.1247304
+	radcliffe_camera:0.17823416
+	all_souls:0.10011638
+	keble:0.3316488
+	magdalen:0.04086988
+	balliol:0.1306628
+	christ_church:0.12772554
+custom mAP: 0.139605576364
+
+
+Sun Apr 21 23:29:10 2019:
+Using cropped query images: False
+QE size = 1
+R-MAC, 512d, no resized
+
+Sun Apr 21 23:31:46 2019:
+Using cropped query images: False
+QE size = 1
+R-MAC, 512d, no resized
+	ashmolean:0.6825524
+	pitt_rivers:0.985926
+	bodleian:0.7821958
+	hertford:0.8481136
+	cornmarket:0.5272182
+	radcliffe_camera:0.9257876
+	all_souls:0.5430276
+	keble:0.9781746
+	magdalen:0.2659128
+	balliol:0.7229914
+	christ_church:0.6876012
+vgg16 mAP: 0.722681927273
+
+Sun Apr 21 23:33:04 2019:
+Using cropped query images: False
+QE size = 2
+R-MAC, 512d, no resized
+	ashmolean:0.760545
+	pitt_rivers:1.0
+	bodleian:0.8236026
+	hertford:0.8852538
+	cornmarket:0.5329016
+	radcliffe_camera:0.9363644
+	all_souls:0.5512282
+	keble:0.9961734
+	magdalen:0.2751576
+	balliol:0.724906
+	christ_church:0.701104
+vgg16 mAP: 0.744294236364
+
+Sun Apr 21 23:35:58 2019:
+Using cropped query images: False
+QE size = 3
+R-MAC, 512d, no resized
+	ashmolean:0.7756194
+	pitt_rivers:1.0
+	bodleian:0.8858106
+	hertford:0.8966734
+	cornmarket:0.5607894
+	radcliffe_camera:0.9386746
+	all_souls:0.5504946
+	keble:0.9888322
+	magdalen:0.2753876
+	balliol:0.7740744
+	christ_church:0.7218994
+vgg16 mAP: 0.760750509091
+
+Sun Apr 21 23:37:30 2019:
+Using cropped query images: False
+QE size = 4
+R-MAC, 512d, no resized
+	ashmolean:0.798739
+	pitt_rivers:1.0
+	bodleian:0.887314
+	hertford:0.9002932
+	cornmarket:0.5610054
+	radcliffe_camera:0.943704
+	all_souls:0.5487808
+	keble:0.9923468
+	magdalen:0.2886076
+	balliol:0.7970882
+	christ_church:0.723467
+vgg16 mAP: 0.767395090909
+
+Sun Apr 21 23:38:52 2019:
+Using cropped query images: False
+QE size = 5
+R-MAC, 512d, no resized
+	ashmolean:0.8097746
+	pitt_rivers:1.0
+	bodleian:0.8969326
+	hertford:0.907115
+	cornmarket:0.5701234
+	radcliffe_camera:0.9447078
+	all_souls:0.5444944
+	keble:1.0
+	magdalen:0.3074454
+	balliol:0.8130634
+	christ_church:0.7226218
+vgg16 mAP: 0.774207127273
+
+Sun Apr 21 23:40:41 2019:
+Using cropped query images: False
+QE size = 6
+R-MAC, 512d, no resized
+	ashmolean:0.8327976
+	pitt_rivers:0.9948412
+	bodleian:0.9065026
+	hertford:0.9102106
+	cornmarket:0.5514814
+	radcliffe_camera:0.9459152
+	all_souls:0.5398452
+	keble:1.0
+	magdalen:0.315038
+	balliol:0.8186576
+	christ_church:0.7137992
+vgg16 mAP: 0.775371690909
+
+Sun Apr 21 23:43:26 2019:
+Using cropped query images: False
+QE size = 7
+R-MAC, 512d, no resized
+	ashmolean:0.8439312
+	pitt_rivers:1.0
+	bodleian:0.9227338
+	hertford:0.9159904
+	cornmarket:0.5444774
+	radcliffe_camera:0.9475886
+	all_souls:0.5427874
+	keble:1.0
+	magdalen:0.2692198
+	balliol:0.8326046
+	christ_church:0.7154602
+vgg16 mAP: 0.775890309091
+
+Sun Apr 21 23:44:55 2019:
+Using cropped query images: False
+QE size = 8
+R-MAC, 512d, no resized
+	ashmolean:0.8376626
+	pitt_rivers:1.0
+	bodleian:0.9287494
+	hertford:0.919071
+	cornmarket:0.5455328
+	radcliffe_camera:0.9465946
+	all_souls:0.5444232
+	keble:1.0
+	magdalen:0.284436
+	balliol:0.8214924
+	christ_church:0.7111218
+vgg16 mAP: 0.776280345455
+
+Sun Apr 21 23:46:35 2019:
+Using cropped query images: False
+QE size = 9
+R-MAC, 512d, no resized
+	ashmolean:0.8331808
+	pitt_rivers:1.0
+	bodleian:0.9256358
+	hertford:0.9226158
+	cornmarket:0.540206
+	radcliffe_camera:0.9481618
+	all_souls:0.5490068
+	keble:0.9961734
+	magdalen:0.288103
+	balliol:0.8126756
+	christ_church:0.707427
+vgg16 mAP: 0.774835090909
+
+Sun Apr 21 23:48:08 2019:
+Using cropped query images: False
+QE size = 10
+R-MAC, 512d, no resized
+	ashmolean:0.8410296
+	pitt_rivers:0.9769246
+	bodleian:0.9321274
+	hertford:0.9221996
+	cornmarket:0.5260286
+	radcliffe_camera:0.950052
+	all_souls:0.5479812
+	keble:0.9961734
+	magdalen:0.268578
+	balliol:0.8262708
+	christ_church:0.7239524
+vgg16 mAP: 0.773756145455
+
+Sun Apr 21 23:49:58 2019:
+Using cropped query images: False
+QE size = 11
+R-MAC, 512d, no resized
+	ashmolean:0.8492904
+	pitt_rivers:0.901796
+	bodleian:0.9347188
+	hertford:0.9241432
+	cornmarket:0.5328738
+	radcliffe_camera:0.9502122
+	all_souls:0.5506752
+	keble:0.9961734
+	magdalen:0.2573454
+	balliol:0.8143558
+	christ_church:0.7243338
+vgg16 mAP: 0.766901636364
+
+Sun Apr 21 23:51:36 2019:
+Using cropped query images: False
+QE size = 12
+R-MAC, 512d, no resized
+	ashmolean:0.845619
+	pitt_rivers:0.8522348
+	bodleian:0.9252192
+	hertford:0.925631
+	cornmarket:0.5148206
+	radcliffe_camera:0.9506156
+	all_souls:0.5515144
+	keble:0.993254
+	magdalen:0.2296278
+	balliol:0.800969
+	christ_church:0.7322494
+vgg16 mAP: 0.756523163636
+
+Sun Apr 21 23:52:55 2019:
+Using cropped query images: False
+QE size = 13
+R-MAC, 512d, no resized
+	ashmolean:0.8453886
+	pitt_rivers:0.8423988
+	bodleian:0.9290558
+	hertford:0.9266856
+	cornmarket:0.5166866
+	radcliffe_camera:0.9507042
+	all_souls:0.5519946
+	keble:0.9909524
+	magdalen:0.2221524
+	balliol:0.7836924
+	christ_church:0.728339
+vgg16 mAP: 0.753459127273
+
+Sun Apr 21 23:54:21 2019:
+Using cropped query images: False
+QE size = 14
+R-MAC, 512d, no resized
+	ashmolean:0.845142
+	pitt_rivers:0.8261068
+	bodleian:0.9292326
+	hertford:0.9292716
+	cornmarket:0.48345162
+	radcliffe_camera:0.95203
+	all_souls:0.5540762
+	keble:0.9909524
+	magdalen:0.2062638
+	balliol:0.7831784
+	christ_church:0.7251158
+vgg16 mAP: 0.74771102
+
+Sun Apr 21 23:56:12 2019:
+Using cropped query images: False
+QE size = 15
+R-MAC, 512d, no resized
+	ashmolean:0.8388896
+	pitt_rivers:0.8019792
+	bodleian:0.9316384
+	hertford:0.931183
+	cornmarket:0.46396208
+	radcliffe_camera:0.9523812
+	all_souls:0.5566706
+	keble:0.9909524
+	magdalen:0.2061126
+	balliol:0.7654848
+	christ_church:0.722925
+vgg16 mAP: 0.742016261818

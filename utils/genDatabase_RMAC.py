@@ -16,7 +16,7 @@ if __name__ == '__main__':
         'custom': 512
     }
 
-    predictorName = 'resnet18'
+    predictorName = 'vgg16'
     predictor = importlib.import_module('predictors.{}'.format(predictorName))
     featuresFile = open('../Data/Oxford-5k/R-MAC/{}_{}_RMAC'.format(predictorName, featureDim[predictorName]), 'wb')
 

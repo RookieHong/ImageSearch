@@ -9,7 +9,7 @@ from rmacRegions import rmac_regions
 
 if __name__ == '__main__':
 
-    predictorName = 'resnet18'
+    predictorName = 'vgg16'
     predictor = importlib.import_module('predictors.{}'.format(predictorName))
     dimension = 512
     PCAfile = open('../Data/PCA/{}_{}_PCA'.format(predictorName, dimension), 'wb')
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             all_features = np.concatenate((all_features, x), axis=0)
 
         count += 1
-        if count % 500 == 0:
+        if count % 100 == 0:
             print('{} images have been processed.'.format(count))
 
      # PCA should be trained on whole dataset

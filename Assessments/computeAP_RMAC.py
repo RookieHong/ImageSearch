@@ -22,7 +22,7 @@ def matchImages(inputFeature, QEsize=0):
 
     if QEsize > 0:  # Query Expansion
         for i in range(0, QEsize):
-            inputFeature = inputFeature + features[matchList[i][0]]
+            inputFeature = inputFeature + features[matchList[i][0] + '.jpg']
         inputFeature = inputFeature / QEsize
 
         matchList = matchImages(inputFeature)
@@ -37,10 +37,10 @@ if __name__ == '__main__':
     ifcropped = False  # Use cropped query images or not
     logFile.write('Using cropped query images: {}\n'.format(ifcropped))
 
-    QEsize = 0  # Use top k retrieved image features' mean to re-retrieve
+    QEsize = 15  # Use top k retrieved image features' mean to re-retrieve
     logFile.write('QE size = {}\n'.format(QEsize))
 
-    predictorName = 'resnet18'
+    predictorName = 'vgg16'
     dimension = 512
     print('{}: \n'.format(predictorName))
     predictor = importlib.import_module('predictors.{}'.format(predictorName))
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         if not gtObject_aps.has_key(gtObject):
             gtObject_aps[gtObject] = []
 
-        featureMap = predictor.getFeatureMap(imgsDir + query_image)[0]
+        featureMap = predictor.getFeatureMap(imgsDir + query_image)[0]  # Replace getFeatureMap with getFeatureMap_resized to get result with using resized input image
         featureMap = featureMap[np.newaxis, :]
         Wmap, Hmap = featureMap.shape[3], featureMap.shape[2]
 
