@@ -6,7 +6,7 @@
 
 使用了多种模型，包括Resnet18，Resnet101，Resnet152，VGG16等等实现了图像检索并对比它们的表现
 
-使用的目标检测算法来自Faster R-CNN
+使用的目标检测算法来自Faster R-CNN， 算法代码来自[MX-RCNN](https://github.com/ijkguo/mx-rcnn)
 
 ![整图检索](rdImgs/ScreenCapture-wholeImg.gif "整图检索")
 
@@ -110,7 +110,7 @@
 
 另外，提取图片的Feature Map时，是否对图片resize也会对结果影响很大，每个predictor里面都有getFeatureMap_resized和getFeatureMap两个函数，其中带resized后缀的是会对输入图片resize的函数
 
-在`Assessments/computeAP_RMAC.py`中提取featureMap的那一行可以修改是否使用resize后的输入图片
+在`Assessments/computeAP_RMAC.py`中提取featureMap的那一行可以修改是否将输入图片resize
 
 传统的图像检索方法：
 
@@ -120,6 +120,8 @@
 | BoW 20k-D | 0.354 |
 | VLAD 64D | 0.555 |
 | Improved Fisher 64D | 0.418 |
+
+以上数据来自相应的论文
 
 朴素CNN图像特征测试结果：
 
@@ -245,9 +247,14 @@
    </tr>
 </table>
 
-可以在`Assessments/computeAP_RMAC.py`中修改QEsize以设置Query Expansion，提高最后的表现，以下是各种QEsize的测试结果：
+可以在`Assessments/computeAP_RMAC.py`中修改QEsize以设置Query Expansion，提高最后的表现，以下是使用VGG16，不resize输入图片下各种QEsize的测试结果：
 
 | k   | 0     | 1     | 2     | 3     | 4     | 5     | 6     | 7     | 8     | 9     | 10    | 11    | 12    | 13    | 14    | 15    |
 |-----|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
 | mAP | 0.722 | 0.723 | 0.744 | 0.761 | 0.767 | 0.774 | 0.775 | 0.776 | 0.776 | 0.775 | 0.774 | 0.767 | 0.757 | 0.753 | 0.748 | 0.742 |
 
+可以看到k=7和8的时候mAP有0.776，已经远远地超出传统的图像检索方法了
+
+这是我作为一个小白从零开始学习深度学习和图像检索做的项目，自己感觉做的比较完整，也踩过很多坑，希望这个项目能够帮到更多同样的在学习的人吧！
+
+还要强力推荐一下[willard-yuan](https://github.com/willard-yuan)！在他的博客里面学到了很多，在学习图像检索的同学们可以多去看看这位前辈的博客！
